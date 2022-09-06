@@ -8,6 +8,8 @@
 import Foundation
 import UIKit
 
+//MARK: - Collection View
+
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionType = sections[section]
