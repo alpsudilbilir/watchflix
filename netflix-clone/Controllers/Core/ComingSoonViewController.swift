@@ -11,7 +11,8 @@ class ComingSoonViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        title = "Coming soon"
+        view.backgroundColor = .systemBackground
         // Do any additional setup after loading the view.
     }
     
