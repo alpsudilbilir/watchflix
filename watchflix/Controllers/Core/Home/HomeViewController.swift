@@ -8,6 +8,7 @@
 import UIKit
 
 enum BrowseSectionType {
+    //TODO: Change items types
     case headerMovies(items: [Int])
     case newReleases(items: [Int])
     case recommendedMovies(items: [Int])
@@ -35,6 +36,7 @@ class HomeViewController: UIViewController {
         fetchMovies()
     }
     private func fetchMovies() {
+        //TODO: - Fetch Data from real API.
         DispatchQueue.main.async {
             self.sections.append(.headerMovies(items: [1,2,3,4,5,6,1,1]))
             self.sections.append(.topList(items: [1,2,3,24,1,13,]))
@@ -57,6 +59,7 @@ class HomeViewController: UIViewController {
         collectionView.register(SectionHeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderCollectionReusableView.identifier)
     }
     private func setupNavBar() {
+        //TODO: Not working fix it 
         navigationController?.navigationItem.leftBarButtonItem = UIBarButtonItem(
             image: UIImage(named: "bar_logo"),
             style: .done,

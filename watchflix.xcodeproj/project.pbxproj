@@ -19,10 +19,12 @@
 		15A3ECF028C7D44C000C45A5 /* SectionHeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A3ECEF28C7D44C000C45A5 /* SectionHeaderCollectionReusableView.swift */; };
 		15A3ECF228C7E998000C45A5 /* MovieCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A3ECF128C7E998000C45A5 /* MovieCollectionViewCell.swift */; };
 		15A3ECF428C7EC0B000C45A5 /* HomeViewController + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A3ECF328C7EC0B000C45A5 /* HomeViewController + Extension.swift */; };
+		15EB2BD428D3717D00920973 /* MovieService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15EB2BD328D3717D00920973 /* MovieService.swift */; };
+		15EB2BD628D3719400920973 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15EB2BD528D3719400920973 /* API.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1519A0B428C6B72900B58DDD /* netflix-clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "netflix-clone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1519A0B428C6B72900B58DDD /* watchflix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = watchflix.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1519A0B728C6B72900B58DDD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1519A0B928C6B72900B58DDD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		1519A0BB28C6B72900B58DDD /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -36,6 +38,8 @@
 		15A3ECEF28C7D44C000C45A5 /* SectionHeaderCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderCollectionReusableView.swift; sourceTree = "<group>"; };
 		15A3ECF128C7E998000C45A5 /* MovieCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCollectionViewCell.swift; sourceTree = "<group>"; };
 		15A3ECF328C7EC0B000C45A5 /* HomeViewController + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewController + Extension.swift"; sourceTree = "<group>"; };
+		15EB2BD328D3717D00920973 /* MovieService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieService.swift; sourceTree = "<group>"; };
+		15EB2BD528D3719400920973 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,7 +56,7 @@
 		1519A0AB28C6B72900B58DDD = {
 			isa = PBXGroup;
 			children = (
-				1519A0B628C6B72900B58DDD /* netflix-clone */,
+				1519A0B628C6B72900B58DDD /* watchflix */,
 				1519A0B528C6B72900B58DDD /* Products */,
 			);
 			sourceTree = "<group>";
@@ -60,12 +64,12 @@
 		1519A0B528C6B72900B58DDD /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1519A0B428C6B72900B58DDD /* netflix-clone.app */,
+				1519A0B428C6B72900B58DDD /* watchflix.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1519A0B628C6B72900B58DDD /* netflix-clone */ = {
+		1519A0B628C6B72900B58DDD /* watchflix */ = {
 			isa = PBXGroup;
 			children = (
 				1519A0CB28C7B5C100B58DDD /* Resources */,
@@ -77,7 +81,7 @@
 				1519A0C228C6B72B00B58DDD /* LaunchScreen.storyboard */,
 				1519A0C528C6B72B00B58DDD /* Info.plist */,
 			);
-			path = "netflix-clone";
+			path = watchflix;
 			sourceTree = "<group>";
 		};
 		1519A0CB28C7B5C100B58DDD /* Resources */ = {
@@ -116,6 +120,8 @@
 		1519A0CF28C7B5F800B58DDD /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				15EB2BD328D3717D00920973 /* MovieService.swift */,
+				15EB2BD528D3719400920973 /* API.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -130,11 +136,11 @@
 		1519A0D328C7BB9F00B58DDD /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				15A3ECF528C7EC5B000C45A5 /* Home */,
 				1519A0D128C7B66200B58DDD /* TabBarViewController.swift */,
+				15A3ECF528C7EC5B000C45A5 /* Home */,
+				1519A0D828C7BC4100B58DDD /* ComingSoonViewController.swift */,
 				1519A0D428C7BBBB00B58DDD /* SearchViewController.swift */,
 				1519A0D628C7BBCC00B58DDD /* DownloadsViewController.swift */,
-				1519A0D828C7BC4100B58DDD /* ComingSoonViewController.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -160,9 +166,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1519A0B328C6B72900B58DDD /* netflix-clone */ = {
+		1519A0B328C6B72900B58DDD /* watchflix */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1519A0C828C6B72B00B58DDD /* Build configuration list for PBXNativeTarget "netflix-clone" */;
+			buildConfigurationList = 1519A0C828C6B72B00B58DDD /* Build configuration list for PBXNativeTarget "watchflix" */;
 			buildPhases = (
 				1519A0B028C6B72900B58DDD /* Sources */,
 				1519A0B128C6B72900B58DDD /* Frameworks */,
@@ -172,9 +178,9 @@
 			);
 			dependencies = (
 			);
-			name = "netflix-clone";
+			name = watchflix;
 			productName = "netflix-clone";
-			productReference = 1519A0B428C6B72900B58DDD /* netflix-clone.app */;
+			productReference = 1519A0B428C6B72900B58DDD /* watchflix.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -192,7 +198,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 1519A0AF28C6B72900B58DDD /* Build configuration list for PBXProject "netflix-clone" */;
+			buildConfigurationList = 1519A0AF28C6B72900B58DDD /* Build configuration list for PBXProject "watchflix" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -205,7 +211,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1519A0B328C6B72900B58DDD /* netflix-clone */,
+				1519A0B328C6B72900B58DDD /* watchflix */,
 			);
 		};
 /* End PBXProject section */
@@ -237,6 +243,8 @@
 				15A3ECF228C7E998000C45A5 /* MovieCollectionViewCell.swift in Sources */,
 				1519A0BA28C6B72900B58DDD /* SceneDelegate.swift in Sources */,
 				1519A0D928C7BC4100B58DDD /* ComingSoonViewController.swift in Sources */,
+				15EB2BD628D3719400920973 /* API.swift in Sources */,
+				15EB2BD428D3717D00920973 /* MovieService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,7 +433,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1519A0AF28C6B72900B58DDD /* Build configuration list for PBXProject "netflix-clone" */ = {
+		1519A0AF28C6B72900B58DDD /* Build configuration list for PBXProject "watchflix" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1519A0C628C6B72B00B58DDD /* Debug */,
@@ -434,7 +442,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1519A0C828C6B72B00B58DDD /* Build configuration list for PBXNativeTarget "netflix-clone" */ = {
+		1519A0C828C6B72B00B58DDD /* Build configuration list for PBXNativeTarget "watchflix" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1519A0C928C6B72B00B58DDD /* Debug */,

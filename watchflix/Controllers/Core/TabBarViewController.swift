@@ -45,8 +45,8 @@ class TabBarViewController: UITabBarController {
             image: UIImage(systemName: "magnifyingglass"),
             tag: 3)
         nav4.tabBarItem = UITabBarItem(
-            title: "Downloads",
-            image: UIImage(systemName: "square.and.arrow.down"),
+            title: "Lists",
+            image: UIImage(systemName: "list.bullet"),
             tag: 4)
         
         setViewControllers(navs, animated: true)
