@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import SDWebImage
 class MovieCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "MovieCollectionViewCell"
@@ -14,11 +14,15 @@ class MovieCollectionViewCell: UICollectionViewCell {
     private let movieImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage()
-        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleToFill
         return imageView
     }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
+        contentView.layer.cornerRadius = 8
+        contentView.layer.masksToBounds = true
         contentView.addSubview(movieImageView)
     }
     required init?(coder: NSCoder) {
@@ -27,8 +31,10 @@ class MovieCollectionViewCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         movieImageView.frame = contentView.bounds
+  
     }
-    func configure(with model: String) {
-        //Configure with model
+    func configure(with model: MovieViewModel) {
+        
+        movieImageView.sd_setImage(with: URL(string: APIConstants.BASE_IMAGE_URL + model.movieImage))
     }
 }

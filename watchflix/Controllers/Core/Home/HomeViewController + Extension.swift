@@ -14,16 +14,13 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionType = sections[section]
         switch sectionType {
-        case .topList(let items):
-            return items.count
-        case .trendingMovies(let items):
-            return items.count
-        case .newReleases(let items):
-            return  items.count
-        case .recommendedMovies(let items):
-            return items.count
-        case .headerMovies(let items):
-            return items.count
+        case .popularMovies(let movies):
+            return movies.count
+        case .trendingMovies(let movies):
+            return movies.count
+        case .topRatedMovies(let movies):
+            return movies.count
+            
         }
     }
     
@@ -34,25 +31,26 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
         let sectionType = sections[indexPath.section]
         switch sectionType {
-        case .recommendedMovies:
-            cell.backgroundColor = .yellow
+        case .popularMovies(let viewModels):
+            let viewModel = viewModels[indexPath.row]
+            cell.configure(with: viewModel)
+            cell.backgroundColor = .secondarySystemBackground
             return cell
-        case .newReleases:
-            cell.backgroundColor = .red
+        case .trendingMovies(let viewModels):
+            let viewModel = viewModels[indexPath.row]
+            cell.configure(with: viewModel)
+            cell.backgroundColor = .secondarySystemBackground
             return cell
-        case .trendingMovies:
-            cell.backgroundColor = .blue
+        case .topRatedMovies(let viewModels):
+            let viewModel = viewModels[indexPath.row]
+            cell.configure(with: viewModel)
+            cell.backgroundColor = .secondarySystemBackground
             return cell
-        case .topList:
-            cell.backgroundColor = .purple
-            return cell
-        case .headerMovies:
-            cell.backgroundColor = .brown
-            return cell
+            
         }
     }
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        sections.count
+        return sections.count
     }
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let header = collectionView.dequeueReusableSupplementaryView(
@@ -63,14 +61,10 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
         let sectionType = sections[indexPath.section]
         switch sectionType {
-        case .newReleases :
-            header.configure(with: "New Releases")
-        case .topList :
-            header.configure(with: "Top List")
-        case .recommendedMovies:
-            header.configure(with: "Recommended")
         case .trendingMovies :
-            header.configure(with: "Editor Selected")
+            header.configure(with: "Trending Movies")
+        case .topRatedMovies :
+            header.configure(with: "Top Rated")
         default:
             header.configure(with: "")
         }
@@ -79,24 +73,25 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     static func createLayout(sectionIndex: Int) -> NSCollectionLayoutSection  {
         switch sectionIndex {
-        case 0: //Header Movies
+        case 0: //Popular
+            
             let item = NSCollectionLayoutItem(
                 layoutSize: NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
                     heightDimension: .fractionalHeight(1)))
-            item.contentInsets = NSDirectionalEdgeInsets(
-                top: 5, leading: 5, bottom: 5, trailing: 5)
-            let group = NSCollectionLayoutGroup.horizontal(
+            item.contentInsets = NSDirectionalEdgeInsets(top: 3, leading: 3 , bottom: 3, trailing: 3)
+            
+            let group = NSCollectionLayoutGroup.vertical(
                 layoutSize: NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
-                    heightDimension: .fractionalWidth(1)),
+                    heightDimension: .absolute(300)),
                 subitem: item,
                 count: 1)
+            
             let section = NSCollectionLayoutSection(group: group)
             section.orthogonalScrollingBehavior = .groupPaging
-            
             return section
-        default: //Other Movies
+        default:
             let sectionBoundaryItem = [
                 NSCollectionLayoutBoundarySupplementaryItem(
                     layoutSize: NSCollectionLayoutSize(
@@ -105,20 +100,19 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
                     elementKind: UICollectionView.elementKindSectionHeader,
                     alignment: .top),
             ]
-            
             let item = NSCollectionLayoutItem(
                 layoutSize: NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1),
                     heightDimension: .fractionalHeight(1)))
             item.contentInsets = NSDirectionalEdgeInsets(
-                top: 5, leading: 5, bottom: 5, trailing: 5)
-            
+                top: 3, leading: 3, bottom: 3, trailing: 3)
             let group = NSCollectionLayoutGroup.horizontal(
                 layoutSize: NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(0.8),
-                    heightDimension: .absolute(200)),
+                    widthDimension: .fractionalWidth(0.9),
+                    heightDimension: .absolute(300)),
                 subitem: item,
                 count: 2)
+
             let section = NSCollectionLayoutSection(group: group)
             section.orthogonalScrollingBehavior = .continuous
             section.boundarySupplementaryItems = sectionBoundaryItem

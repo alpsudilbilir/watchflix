@@ -8,18 +8,18 @@
 import UIKit
 
 enum BrowseSectionType {
-    //TODO: Change items types
-    case headerMovies(items: [Int])
-    case newReleases(items: [Int])
-    case recommendedMovies(items: [Int])
-    case topList(items: [Int])
-    case trendingMovies(items: [Int])
+    case popularMovies(viewModel: [MovieViewModel])
+    case trendingMovies(viewModel: [MovieViewModel])
+    case topRatedMovies(viewModel: [MovieViewModel])
+    
 }
 
 class HomeViewController: UIViewController {
-    
-    
     var sections = [BrowseSectionType]()
+
+    private var popularMovies = [Movie]()
+    private var trendingMovies = [Movie]()
+    private var topRatedMovies = [Movie]()
     
     private var collectionView = UICollectionView(
         frame: .zero,
@@ -32,19 +32,63 @@ class HomeViewController: UIViewController {
         title = "Home"
         view.backgroundColor = .systemBackground
         setupCollectionView()
-        setupNavBar()
         fetchMovies()
     }
     private func fetchMovies() {
-        //TODO: - Fetch Data from real API.
-        DispatchQueue.main.async {
-            self.sections.append(.headerMovies(items: [1,2,3,4,5,6,1,1]))
-            self.sections.append(.topList(items: [1,2,3,24,1,13,]))
-            self.sections.append(.newReleases(items: [1,1,1,1,1,1,1]))
-            self.sections.append(.recommendedMovies(items: [1,2,3,4,5,1,1,1]))
-            self.sections.append(.trendingMovies(items: [1,2,3]))
-            self.collectionView.reloadData()
+        
+        MovieService.shared.getPopularMovies{ [weak self] result in
+            guard let strongSelf = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let popularMovies):
+                    strongSelf.popularMovies = popularMovies
+                    strongSelf.sections.append(.popularMovies(viewModel: popularMovies.compactMap({
+                        return MovieViewModel(
+                            title: $0.title,
+                            movieImage: $0.poster_path ?? "-")
+                    })))
+                    strongSelf.collectionView.reloadData()
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
         }
+        
+        MovieService.shared.getTrendingMovies { [weak self] result in
+            guard let strongSelf = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let trendingMovies):
+                    strongSelf.trendingMovies = trendingMovies
+                    strongSelf.sections.append(.trendingMovies(viewModel: strongSelf.trendingMovies.compactMap({
+                        return MovieViewModel(
+                            title: $0.title,
+                            movieImage: $0.poster_path ?? "-")
+                    })))
+                    strongSelf.collectionView.reloadData()
+                case .failure(let error):
+                    print("Error when fetching movies.")
+                }
+            }
+        }
+        MovieService.shared.getTopRatedMovies { [weak self] result in
+            guard let strongSelf = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let topMovies):
+                    strongSelf.topRatedMovies = topMovies
+                    strongSelf.sections.append(.topRatedMovies(viewModel: strongSelf.topRatedMovies.compactMap({
+                        return MovieViewModel(
+                            title: $0.title,
+                            movieImage: $0.poster_path ?? "-")
+                    })))
+                    self?.collectionView.reloadData()
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        }
+
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -58,13 +102,6 @@ class HomeViewController: UIViewController {
         collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
         collectionView.register(SectionHeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderCollectionReusableView.identifier)
     }
-    private func setupNavBar() {
-        //TODO: Not working fix it 
-        navigationController?.navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(named: "bar_logo"),
-            style: .done,
-            target: self,
-            action: nil)
-    }
+
 }
 
