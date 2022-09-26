@@ -23,6 +23,9 @@
 		159FB5BA28DF03BE0066974F /* MovieResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159FB5B928DF03BE0066974F /* MovieResponse.swift */; };
 		159FB5BC28DF17B10066974F /* MovieViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159FB5BB28DF17B10066974F /* MovieViewModel.swift */; };
 		159FB5BF28DF18C30066974F /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 159FB5BE28DF18C30066974F /* SDWebImage */; };
+		15A3338628E164700075CF6F /* Endpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A3338528E164700075CF6F /* Endpoints.swift */; };
+		15A3338828E16C640075CF6F /* TVResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A3338728E16C640075CF6F /* TVResponse.swift */; };
+		15A3338A28E1A6E10075CF6F /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A3338928E1A6E10075CF6F /* DetailsViewController.swift */; };
 		15A3ECF028C7D44C000C45A5 /* SectionHeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A3ECEF28C7D44C000C45A5 /* SectionHeaderCollectionReusableView.swift */; };
 		15A3ECF228C7E998000C45A5 /* MovieCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A3ECF128C7E998000C45A5 /* MovieCollectionViewCell.swift */; };
 		15A3ECF428C7EC0B000C45A5 /* HomeViewController + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A3ECF328C7EC0B000C45A5 /* HomeViewController + Extension.swift */; };
@@ -48,6 +51,9 @@
 		159FB5B728DF00510066974F /* APIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConstants.swift; sourceTree = "<group>"; };
 		159FB5B928DF03BE0066974F /* MovieResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieResponse.swift; sourceTree = "<group>"; };
 		159FB5BB28DF17B10066974F /* MovieViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewModel.swift; sourceTree = "<group>"; };
+		15A3338528E164700075CF6F /* Endpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoints.swift; sourceTree = "<group>"; };
+		15A3338728E16C640075CF6F /* TVResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVResponse.swift; sourceTree = "<group>"; };
+		15A3338928E1A6E10075CF6F /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
 		15A3ECEF28C7D44C000C45A5 /* SectionHeaderCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderCollectionReusableView.swift; sourceTree = "<group>"; };
 		15A3ECF128C7E998000C45A5 /* MovieCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCollectionViewCell.swift; sourceTree = "<group>"; };
 		15A3ECF328C7EC0B000C45A5 /* HomeViewController + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewController + Extension.swift"; sourceTree = "<group>"; };
@@ -122,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				1519A0D328C7BB9F00B58DDD /* Core */,
+				15A3338928E1A6E10075CF6F /* DetailsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -130,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				159FB5B928DF03BE0066974F /* MovieResponse.swift */,
+				15A3338728E16C640075CF6F /* TVResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -149,6 +157,7 @@
 				159FB5B728DF00510066974F /* APIConstants.swift */,
 				15EB2BD528D3719400920973 /* APISettings.swift */,
 				15EB2BD328D3717D00920973 /* MovieService.swift */,
+				15A3338528E164700075CF6F /* Endpoints.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -286,9 +295,12 @@
 				15A3ECF028C7D44C000C45A5 /* SectionHeaderCollectionReusableView.swift in Sources */,
 				15A3ECF228C7E998000C45A5 /* MovieCollectionViewCell.swift in Sources */,
 				1519A0BA28C6B72900B58DDD /* SceneDelegate.swift in Sources */,
+				15A3338A28E1A6E10075CF6F /* DetailsViewController.swift in Sources */,
 				1500A9BE28DFB5AD0026C4DE /* UpcomingTableViewCell.swift in Sources */,
+				15A3338828E16C640075CF6F /* TVResponse.swift in Sources */,
 				159FB5BC28DF17B10066974F /* MovieViewModel.swift in Sources */,
 				1519A0D928C7BC4100B58DDD /* UpcomingViewController.swift in Sources */,
+				15A3338628E164700075CF6F /* Endpoints.swift in Sources */,
 				1500A9C028DFB7260026C4DE /* Extensions.swift in Sources */,
 				15EB2BD628D3719400920973 /* APISettings.swift in Sources */,
 				1500A9C228DFB82A0026C4DE /* UpcomingsViewModel.swift in Sources */,

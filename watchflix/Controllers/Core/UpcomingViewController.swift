@@ -32,7 +32,7 @@ class UpcomingViewController: UIViewController {
             switch result {
             case .success(let upcomings):
                 DispatchQueue.main.async {
-                    strongSelf.upcomingMovies = upcomings
+                    strongSelf.upcomingMovies = upcomings.reversed()
                     strongSelf.viewModels.append(contentsOf: strongSelf.upcomingMovies.compactMap({
                         return UpcomingsViewModel(
                             title: $0.title,
@@ -43,7 +43,6 @@ class UpcomingViewController: UIViewController {
                 }
             case .failure(let error):
                 print(error.localizedDescription)
-                
             }
         }
     }
@@ -62,7 +61,6 @@ extension UpcomingViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //TODO: Create Custom Cell
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UpcomingTableViewCell.identifier, for: indexPath) as? UpcomingTableViewCell else {
             return UITableViewCell()
         }

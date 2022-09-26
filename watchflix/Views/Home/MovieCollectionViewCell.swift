@@ -30,6 +30,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     }
     
     override func layoutSubviews() {
+        super.layoutSubviews()
         movieImageView.frame = contentView.bounds
   
     }

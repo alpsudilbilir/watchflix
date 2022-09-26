@@ -23,10 +23,10 @@ final class MovieService {
     }
     
     
-    //MARK: Get Movies
+    //MARK: - Get Movies
     
     func getPopularMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
-        createRequest(with: URL(string: APIConstants.BASE_URL + APIConstants.POPULAR_MOVIES + APIConstants.API_KEY), type: .GET) { request in
+        createRequest(with: URL(string: APIConstants.BASE_URL + Endpoints.POPULAR_MOVIES + APIConstants.API_KEY + "&page=\(APIConstants.PAGE)"), type: .GET) { request in
             let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 guard let data = data else {
                     print(APISettings.APIError.failedToGetData)
@@ -45,7 +45,7 @@ final class MovieService {
         }
     }
     func getTrendingMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
-        createRequest(with: URL(string: APIConstants.BASE_URL + APIConstants.TRENDING_MOVIES + APIConstants.API_KEY), type: .GET) { request in
+        createRequest(with: URL(string: APIConstants.BASE_URL + Endpoints.TRENDING_MOVIES + APIConstants.API_KEY + "&page=\(APIConstants.PAGE)"), type: .GET) { request in
             let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 guard let data = data else {
                     print(APISettings.APIError.failedToGetData)
@@ -65,7 +65,7 @@ final class MovieService {
     }
     
     func getTopRatedMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
-        createRequest(with: URL(string: APIConstants.BASE_URL + APIConstants.TOP_RATED_MOVIES + APIConstants.API_KEY), type: .GET) { request in
+        createRequest(with: URL(string: APIConstants.BASE_URL + Endpoints.TOP_RATED_MOVIES + APIConstants.API_KEY + "&page=\(APIConstants.PAGE)"), type: .GET) { request in
             let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 guard let data = data else {
                     print((APISettings.APIError.failedToGetData))
@@ -85,7 +85,7 @@ final class MovieService {
     }
     
     func getUpcomings(completion: @escaping (Result<[Movie], Error>) -> Void) {
-        createRequest(with: URL(string: APIConstants.BASE_URL + APIConstants.UPCOMING + APIConstants.API_KEY ), type: .GET) { request in
+        createRequest(with: URL(string: APIConstants.BASE_URL + Endpoints.UPCOMING + APIConstants.API_KEY ), type: .GET) { request in
             let task = URLSession.shared.dataTask(with: request) { data, response, error in
                 guard let data = data else {
                     print(APISettings.APIError.failedToGetData)
@@ -104,5 +104,69 @@ final class MovieService {
         }
     }
     
+    
+    func getNowPlayings(completion: @escaping (Result<[Movie], Error>) -> Void) {
+        createRequest(with: URL(string: APIConstants.BASE_URL + Endpoints.NOW_PLAYING + APIConstants.API_KEY +
+                                "&page=\(APIConstants.PAGE + 4)" ), type: .GET) { request in
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data else {
+                    print(APISettings.APIError.failedToGetData)
+                    return
+                }
+                do {
+                    let response = try JSONDecoder().decode(MovieResponse.self, from: data)
+                    let movies = response.results
+                    completion(.success(movies))
+                }
+                catch {
+                    completion(.failure(error))
+                }
+            }
+            task.resume()
+        }
+    }
+    
+    //MARK: - Get TV Series
+    
+    func getPopularSeries(completion: @escaping (Result<[TV], Error>) -> Void) {
+        createRequest(with: URL(string: APIConstants.BASE_URL + Endpoints.POPULAR_TV + APIConstants.API_KEY + "&page=\(APIConstants.PAGE)"), type: .GET) { request in
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data else {
+                    print(APISettings.APIError.failedToGetData)
+                    return
+                }
+                
+                do {
+                    let response = try JSONDecoder().decode(TVResponse.self, from: data)
+                    let series = response.results
+                    completion(.success(series))
+                }
+                catch {
+                    completion(.failure(error))
+                }
+            }
+            task.resume()
+        }
+    }
+    
+    func getTopRatedSeries(completion: @escaping (Result<[TV], Error>) -> Void) {
+        createRequest(with: URL(string: APIConstants.BASE_URL + Endpoints.TOP_RATED_TV + APIConstants.API_KEY + "&page=\(APIConstants.PAGE)" ), type: .GET) { request in
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data else {
+                    print(APISettings.APIError.failedToGetData)
+                    return
+                }
+                do {
+                    let response = try JSONDecoder().decode(TVResponse.self, from: data)
+                    let series = response.results
+                    completion(.success(series))
+                }
+                catch {
+                    completion(.failure(error))
+                }
+            }
+            task.resume()
+        }
+    }
     
 }
