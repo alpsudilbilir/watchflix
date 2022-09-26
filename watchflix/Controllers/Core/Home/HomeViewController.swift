@@ -16,7 +16,7 @@ enum BrowseSectionType {
 
 class HomeViewController: UIViewController {
     var sections = [BrowseSectionType]()
-
+    
     private var popularMovies = [Movie]()
     private var trendingMovies = [Movie]()
     private var topRatedMovies = [Movie]()
@@ -35,60 +35,65 @@ class HomeViewController: UIViewController {
         fetchMovies()
     }
     private func fetchMovies() {
+        let group = DispatchGroup()
+        group.enter()
+        group.enter()
+        group.enter()
+        
         
         MovieService.shared.getPopularMovies{ [weak self] result in
+            group.leave()
             guard let strongSelf = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let popularMovies):
-                    strongSelf.popularMovies = popularMovies
-                    strongSelf.sections.append(.popularMovies(viewModel: popularMovies.compactMap({
-                        return MovieViewModel(
-                            title: $0.title,
-                            movieImage: $0.poster_path ?? "-")
-                    })))
-                    strongSelf.collectionView.reloadData()
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
+            switch result {
+            case .success(let popularMovies):
+                strongSelf.popularMovies = popularMovies
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
         
         MovieService.shared.getTrendingMovies { [weak self] result in
+            group.leave()
             guard let strongSelf = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let trendingMovies):
-                    strongSelf.trendingMovies = trendingMovies
-                    strongSelf.sections.append(.trendingMovies(viewModel: strongSelf.trendingMovies.compactMap({
-                        return MovieViewModel(
-                            title: $0.title,
-                            movieImage: $0.poster_path ?? "-")
-                    })))
-                    strongSelf.collectionView.reloadData()
-                case .failure(let error):
-                    print("Error when fetching movies.")
-                }
+            switch result {
+            case .success(let trendingMovies):
+                strongSelf.trendingMovies = trendingMovies
+            case .failure(let error):
+                print("Error when fetching movies.")
             }
         }
         MovieService.shared.getTopRatedMovies { [weak self] result in
+            group.leave()
             guard let strongSelf = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let topMovies):
-                    strongSelf.topRatedMovies = topMovies
-                    strongSelf.sections.append(.topRatedMovies(viewModel: strongSelf.topRatedMovies.compactMap({
-                        return MovieViewModel(
-                            title: $0.title,
-                            movieImage: $0.poster_path ?? "-")
-                    })))
-                    self?.collectionView.reloadData()
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
+            switch result {
+            case .success(let topMovies):
+                strongSelf.topRatedMovies = topMovies
+                
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
-
+        
+        group.notify(queue: .main) {
+            self.sections.append(.popularMovies(viewModel: self.popularMovies.compactMap({
+                return MovieViewModel(
+                    title: $0.title,
+                    movieImage: $0.poster_path ?? "-")
+            })))
+            self.sections.append(.trendingMovies(viewModel: self.trendingMovies.compactMap({
+                return MovieViewModel(
+                    title: $0.title,
+                    movieImage: $0.poster_path ?? "-")
+            })))
+            self.sections.append(.topRatedMovies(viewModel: self.topRatedMovies.compactMap({
+                return MovieViewModel(
+                    title: $0.title,
+                    movieImage: $0.poster_path ?? "-")
+            })))
+            self.collectionView.reloadData()
+        }
+        
+        
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -102,6 +107,6 @@ class HomeViewController: UIViewController {
         collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
         collectionView.register(SectionHeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderCollectionReusableView.identifier)
     }
-
+    
 }
 

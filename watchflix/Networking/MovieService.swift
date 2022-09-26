@@ -42,7 +42,6 @@ final class MovieService {
                 }
             }
             task.resume()
-            
         }
     }
     func getTrendingMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
@@ -76,6 +75,26 @@ final class MovieService {
                     let response = try JSONDecoder().decode(MovieResponse.self, from: data)
                     let movies = response.results
                     completion(.success(movies))
+                }
+                catch {
+                    completion(.failure(error))
+                }
+            }
+            task.resume()
+        }
+    }
+    
+    func getUpcomings(completion: @escaping (Result<[Movie], Error>) -> Void) {
+        createRequest(with: URL(string: APIConstants.BASE_URL + APIConstants.UPCOMING + APIConstants.API_KEY ), type: .GET) { request in
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data else {
+                    print(APISettings.APIError.failedToGetData)
+                    return
+                }
+                do {
+                    let response = try JSONDecoder().decode(MovieResponse.self, from: data)
+                    let upcomings = response.results
+                    completion(.success(upcomings))
                 }
                 catch {
                     completion(.failure(error))

@@ -14,12 +14,12 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionType = sections[section]
         switch sectionType {
-        case .popularMovies(let movies):
-            return movies.count
-        case .trendingMovies(let movies):
-            return movies.count
-        case .topRatedMovies(let movies):
-            return movies.count
+        case .popularMovies(let popularMovies):
+            return popularMovies.count
+        case .trendingMovies(let trendingMovies):
+            return trendingMovies.count
+        case .topRatedMovies(let topRatedMovies):
+            return topRatedMovies.count
             
         }
     }
@@ -30,6 +30,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             return UICollectionViewCell()
         }
         let sectionType = sections[indexPath.section]
+        
         switch sectionType {
         case .popularMovies(let viewModels):
             let viewModel = viewModels[indexPath.row]
@@ -73,7 +74,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     static func createLayout(sectionIndex: Int) -> NSCollectionLayoutSection  {
         switch sectionIndex {
-        case 0: //Popular
+        case 0:
             
             let item = NSCollectionLayoutItem(
                 layoutSize: NSCollectionLayoutSize(
@@ -108,11 +109,10 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 top: 3, leading: 3, bottom: 3, trailing: 3)
             let group = NSCollectionLayoutGroup.horizontal(
                 layoutSize: NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(0.9),
-                    heightDimension: .absolute(300)),
+                    widthDimension: .fractionalWidth(0.8),
+                    heightDimension: .absolute(250)),
                 subitem: item,
                 count: 2)
-
             let section = NSCollectionLayoutSection(group: group)
             section.orthogonalScrollingBehavior = .continuous
             section.boundarySupplementaryItems = sectionBoundaryItem

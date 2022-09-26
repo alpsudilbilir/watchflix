@@ -16,7 +16,7 @@ class TabBarViewController: UITabBarController {
     
     private func setupTabBar() {
         let vc1 = HomeViewController()
-        let vc2 = ComingSoonViewController()
+        let vc2 = UpcomingViewController()
         let vc3  = SearchViewController()
         let vc4 = DownloadsViewController()
         
@@ -37,7 +37,7 @@ class TabBarViewController: UITabBarController {
             image: UIImage(systemName: "house"),
             tag: 1)
         nav2.tabBarItem = UITabBarItem(
-            title: "Coming soon",
+            title: "Upcoming",
             image: UIImage(systemName: "play.tv.fill"),
             tag: 2)
         nav3.tabBarItem = UITabBarItem(
