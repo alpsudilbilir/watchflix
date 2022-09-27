@@ -11,7 +11,7 @@ import Foundation
 struct Endpoints {
     
     //MARK: - Movies
-    
+    static let MOVIE = "/movie"
     static let POPULAR_MOVIES = "/movie/popular?"
     static let TRENDING_MOVIES = "/trending/movie/week?"
     static let TOP_RATED_MOVIES = "/movie/top_rated?"

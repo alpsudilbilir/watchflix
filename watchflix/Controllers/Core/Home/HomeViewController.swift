@@ -37,7 +37,7 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Home"
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .secondarySystemBackground
         setupCollectionView()
         setupNavigationBar()
         fetchMovies()
@@ -68,7 +68,7 @@ class HomeViewController: UIViewController {
     @objc func didTapProfileButton() { }
     private func setupCollectionView() {
         view.addSubview(collectionView)
-        collectionView.backgroundColor = .systemBackground
+        collectionView.backgroundColor = .secondarySystemBackground
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)

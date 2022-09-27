@@ -25,6 +25,19 @@ final class MovieService {
     
     //MARK: - Get Movies
     
+    func getById(with id: String, completion: @escaping (Result<Movie, Error>) -> Void) {
+        
+        createRequest(with: URL(string: APIConstants.BASE_URL + Endpoints.MOVIE + "/\(id)?" + APIConstants.API_KEY), type: .GET) { request in
+            let task = URLSession.shared.dataTask(with: request) { data, _, error in
+                guard let data = data else {
+                    print(APISettings.APIError.failedToGetData)
+                    return
+                }
+                
+            }
+        }
+    }
+    
     func getPopularMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
         createRequest(with: URL(string: APIConstants.BASE_URL + Endpoints.POPULAR_MOVIES + APIConstants.API_KEY + "&page=\(APIConstants.PAGE)"), type: .GET) { request in
             let task = URLSession.shared.dataTask(with: request) { data, response, error in

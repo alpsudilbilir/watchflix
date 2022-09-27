@@ -74,25 +74,36 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         collectionView.deselectItem(at: indexPath, animated: true)
         
         let section = sections[indexPath.section]
-        var movie: Movie? = nil
+        
         var show: TV
         switch section {
         case .popularMovies:
-             movie = popularMovies[indexPath.row]
+             let movie = popularMovies[indexPath.row]
+            let vc = MovieDetailsViewController(movie: movie)
+            navigationController?.pushViewController(vc, animated: true)
+
         case .trendingMovies:
-             movie = trendingMovies[indexPath.row]
+             let movie = trendingMovies[indexPath.row]
+            let vc = MovieDetailsViewController(movie: movie)
+            navigationController?.pushViewController(vc, animated: true)
+
         case .topRatedMovies:
-             movie = topRatedMovies[indexPath.row]
+             let movie = topRatedMovies[indexPath.row]
+            let vc = MovieDetailsViewController(movie: movie)
+            navigationController?.pushViewController(vc, animated: true)
+
         case .popularShows:
              show = popularShows[indexPath.row]
         case .topRatedShows:
              show = topRatedShows[indexPath.row]
         case .nowPlayings:
-             movie = nowPlayingMovies[indexPath.row]
+             let movie = nowPlayingMovies[indexPath.row]
+            let vc = MovieDetailsViewController(movie: movie)
+
+            navigationController?.pushViewController(vc, animated: true)
+
         }
         
-        let vc = DetailsViewController(movie: movie)
-        navigationController?.pushViewController(vc, animated: true)
     }
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return sections.count
@@ -158,11 +169,11 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             let group = NSCollectionLayoutGroup.horizontal(
                 layoutSize: NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(0.8),
-                    heightDimension: .absolute(250)),
+                    heightDimension: .absolute(200)),
                 subitem: item,
                 count: 2)
             let section = NSCollectionLayoutSection(group: group)
-            section.orthogonalScrollingBehavior = .continuous
+            section.orthogonalScrollingBehavior = .groupPaging
             section.boundarySupplementaryItems = sectionBoundaryItem
             return section
         }
