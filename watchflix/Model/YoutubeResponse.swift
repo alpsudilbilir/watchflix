@@ -19,5 +19,4 @@ struct Videos: Codable {
 struct Video: Codable {
     let kind: String
     let videoId: String
-    
 }

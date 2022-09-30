@@ -67,6 +67,8 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             cell.configure(with: viewModel)
             cell.backgroundColor = .secondarySystemBackground
             return cell
+          
+
             
         }
     }
@@ -132,6 +134,8 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
         return header
     }
+    
+
     
     static func createLayout(sectionIndex: Int) -> NSCollectionLayoutSection  {
         switch sectionIndex {

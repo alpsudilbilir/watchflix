@@ -25,7 +25,7 @@ final class MovieService {
     
     //MARK: - Get Movies
     
-    func getById(with id: String, completion: @escaping (Result<Movie, Error>) -> Void) {
+    func getById(with id: Int, completion: @escaping (Result<MovieDetailsResponse, Error>) -> Void) {
         
         createRequest(with: URL(string: APIConstants.BASE_URL + Endpoints.MOVIE + "/\(id)?" + APIConstants.API_KEY), type: .GET) { request in
             let task = URLSession.shared.dataTask(with: request) { data, _, error in
@@ -34,7 +34,15 @@ final class MovieService {
                     return
                 }
                 
+                do {
+                    let response = try JSONDecoder().decode(MovieDetailsResponse.self, from: data)
+                    completion(.success(response))
+                } catch {
+                    completion(.failure(error))
+                }
+                
             }
+            task.resume()
         }
     }
     
@@ -136,6 +144,28 @@ final class MovieService {
                 }
             }
             task.resume()
+        }
+    }
+    
+    func getCast(with id: Int, completion: @escaping (Result<[Cast], Error>) -> Void) {
+        createRequest(with: URL(string: APIConstants.BASE_URL + Endpoints.MOVIE + "/\(id)" + Endpoints.CAST + APIConstants.API_KEY), type: .GET) { request in
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data else {
+                    print(APISettings.APIError.failedToGetData)
+                    return
+                }
+                do {
+                    let response = try JSONDecoder().decode(CastResponse.self, from: data)
+                    let cast = response.cast
+                    print(cast)
+                    completion(.success(cast))
+                }
+                catch {
+                    completion(.failure(error))
+                }
+            }
+            task.resume()
+            
         }
     }
     

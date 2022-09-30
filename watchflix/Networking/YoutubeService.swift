@@ -33,7 +33,7 @@ final class YoutubeService {
             }
             do {
                 let response = try JSONDecoder().decode(YoutubeResponse.self, from: data)
-                guard let video = response.items.first else { return }
+                guard let video = response.items.first else { return }
                 completion(.success(video.id))
             }
             catch {

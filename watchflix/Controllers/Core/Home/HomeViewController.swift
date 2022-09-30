@@ -62,7 +62,7 @@ class HomeViewController: UIViewController {
             action: #selector(didTapProfileButton))
         let logo = UIBarButtonItem(customView: UIImageView(image: UIImage(named: "bar_logo")))
         
-        navigationItem.rightBarButtonItems = [logo, person]
+        navigationItem.rightBarButtonItems = [logo, person]
     }
     @objc func didTapMenuButton() { }
     @objc func didTapProfileButton() { }
@@ -73,6 +73,18 @@ class HomeViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
         collectionView.register(SectionHeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderCollectionReusableView.identifier)
+    }
+    private func alert() {
+        let alert = UIAlertController(title: "Network Error", message: "Check your internet connection and try again.", preferredStyle: .alert)
+        let tryAgain = UIAlertAction(title: "Try again", style: .default) { _ in
+            self.fetchMovies()
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel)
+        alert.addAction(tryAgain)
+        alert.addAction(cancel)
+        
+        present(alert, animated: true)
+        
     }
     private func fetchMovies() {
         let group = DispatchGroup()
@@ -91,6 +103,7 @@ class HomeViewController: UIViewController {
                     strongSelf.popularMovies += popularMovies
                 case .failure(let error):
                     print(error.localizedDescription)
+                    self?.alert()
                 }
             }
             
@@ -102,6 +115,7 @@ class HomeViewController: UIViewController {
                     strongSelf.trendingMovies += trendingMovies
                 case .failure(let error):
                     print(error.localizedDescription)
+                    self?.alert()
                 }
             }
             MovieService.shared.getTopRatedMovies { [weak self] result in
@@ -112,6 +126,7 @@ class HomeViewController: UIViewController {
                     
                 case .failure(let error):
                     print(error.localizedDescription)
+                    self?.alert()
                 }
             }
             MovieService.shared.getPopularSeries { [weak self] result in
@@ -121,6 +136,7 @@ class HomeViewController: UIViewController {
                     strongSelf.popularShows += popularSeries
                 case .failure(let error):
                     print(error.localizedDescription)
+                    self?.alert()
                 }
             }
 
@@ -131,6 +147,7 @@ class HomeViewController: UIViewController {
                     strongSelf.topRatedShows += topRatedSeries
                 case .failure(let error):
                     print(error.localizedDescription)
+                    self?.alert()
                 }
             }
             MovieService.shared.getNowPlayings { [weak self] result in
@@ -140,6 +157,7 @@ class HomeViewController: UIViewController {
                     strongSelf.nowPlayingMovies += nowPlayings
                 case .failure(let error):
                     print(error.localizedDescription)
+                    self?.alert()
                 }
             }
             APIConstants.PAGE += 1
@@ -162,32 +180,38 @@ class HomeViewController: UIViewController {
     private func configureSections() {
         self.sections.append(.popularMovies(viewModel: self.popularMovies.map({
             return MovieViewModel(
+                id: $0.id,
                 title: $0.title,
                 movieImage: $0.poster_path ?? "-")
         })))
         self.sections.append(.trendingMovies(viewModel: self.trendingMovies.map({
             return MovieViewModel(
+                id: $0.id,
                 title: $0.title,
                 movieImage: $0.poster_path ?? "-")
         })))
         self.sections.append(.topRatedMovies(viewModel: self.topRatedMovies.map({
             return MovieViewModel(
+                id: $0.id,
                 title: $0.title,
                 movieImage: $0.poster_path ?? "-")
         })))
         self.sections.append(.popularShows(viewModel: self.popularShows.map({
             return MovieViewModel(
+                id: $0.id,
                 title: $0.name,
                 movieImage: $0.poster_path ?? "-")
         })))
 
         self.sections.append(.topRatedShows(viewModel: self.topRatedShows.map({
             return MovieViewModel(
+                id: $0.id,
                 title: $0.name,
                 movieImage: $0.poster_path ?? "-")
         })))
         self.sections.append(.nowPlayings(viewModel: self.nowPlayingMovies.map({
             return MovieViewModel(
+                id: $0.id,
                 title: $0.title,
                 movieImage: $0.poster_path ?? "-")
         })))
