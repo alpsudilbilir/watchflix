@@ -4,7 +4,7 @@
 //
 //  Created by Alpsu Dilbilir on 26.09.2022.
 //
-
+import SnapKit
 import UIKit
 import WebKit
 
@@ -17,15 +17,15 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
     var sections = [Section]()
     
     //MARK: - Subviews
-    private let movieTitleView = MovieTitleView()
-    private let overviewView = OverviewView()
-    
-    private let webView: WKWebView = WKWebView()
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.backgroundColor = .secondarySystemBackground
         return scrollView
     }()
+    private let webView: WKWebView = WKWebView()
+    
+    private let movieTitleView = MovieTitleView()
+    private let overviewView = OverviewView()
     
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewCompositionalLayout(sectionProvider: { sectionIndex, _ in
         let sectionBoundaryItem = [
@@ -56,7 +56,7 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
     
     //MARK: - Initializing
     private var cast = [Cast]()
-    private var movies = [Movie]()
+    private var similarMovies = [Movie]()
     let movie: Movie
     init(movie: Movie) {
         self.movie = movie
@@ -70,23 +70,18 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(movie.id)
         title = "\(movie.title)"
         view.backgroundColor = .secondarySystemBackground
         navigationController?.navigationBar.prefersLargeTitles = false
         
-        view.addSubview(scrollView)
-        scrollView.addSubview(webView)
-        scrollView.addSubview(movieTitleView)
-        scrollView.addSubview(overviewView)
-        scrollView.addSubview(collectionView)
-        
-        scrollView.contentSize = CGSize(width: self.view.width, height: self.view.heigth * 1.5)
+     
+        setupViews()
         configureWebView()
         configureCollectionView()
         //        fetchTrailer()
         fetchMovie(by: movie.id)
         fetchCast()
+        
     }
     private func configureCollectionView() {
         collectionView.backgroundColor = .secondarySystemBackground
@@ -95,6 +90,13 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
         collectionView.register(CastCollectionViewCell.self, forCellWithReuseIdentifier: CastCollectionViewCell.identifier)
         collectionView.register(SectionHeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderCollectionReusableView.identifier)
     }
+    private func configureWebView() {
+        webView.layer.masksToBounds = true
+        webView.layer.cornerRadius = 8
+        webView.navigationDelegate = self
+        webView.allowsBackForwardNavigationGestures = true
+    }
+    
     private func fetchCast() {
         MovieService.shared.getCast(with: movie.id) { [weak self] result in
             guard let strongSelf = self else { return }
@@ -108,7 +110,7 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
                             name: $0.name,
                             order: $0.order,
                             profile_path: $0.profile_path)
-                            
+                        
                     })))
                 case .failure(let error):
                     print(error.localizedDescription)
@@ -116,10 +118,6 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
                 strongSelf.collectionView.reloadData()
             }
         }
-    }
-    private func configureWebView() {
-        webView.navigationDelegate = self
-        webView.allowsBackForwardNavigationGestures = true
     }
     
     private func fetchMovie(by id: Int) {
@@ -152,43 +150,44 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
         }
     }
     
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        scrollView.frame = CGRect(
-            x: 0,
-            y: view.safeAreaInsets.top,
-            width: view.width,
-            height: view.heigth - view.safeAreaInsets.top - view.safeAreaInsets.bottom)
-        
-        webView.frame = CGRect(
-            x: 5,
-            y: 0,
-            width: scrollView.width - 10,
-            height: 250)
-        webView.layer.masksToBounds = true
-        webView.layer.cornerRadius = 8
-        
-        movieTitleView.frame = CGRect(
-            x: 5,
-            y: webView.bottom + 10,
-            width: scrollView.width,
-            height: 150)
-        overviewView.frame = CGRect(
-            x: 5,
-            y: movieTitleView.bottom + 5,
-            width: scrollView.width - 10,
-            height: 250)
-        
-        collectionView.frame = CGRect(
-            x: 5,
-            y: overviewView.bottom + 5,
-            width: scrollView.width - 10,
-            height: 600)
-    }
-}
+    //MARK: - Constraint
+    func setupViews() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(webView)
+        scrollView.addSubview(movieTitleView)
+        scrollView.addSubview(overviewView)
+        scrollView.addSubview(collectionView)
+        scrollView.alwaysBounceVertical = true
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
+        }
+        scrollView.contentSize = CGSize(width: self.view.width, height: self.view.heigth * 2)
 
+        webView.snp.makeConstraints { make in
+            make.top.equalTo(scrollView)
+            make.width.equalToSuperview()
+            make.height.equalTo(250)
+
+        }
+        movieTitleView.snp.makeConstraints { make in
+            make.top.equalTo(webView.snp.bottom).offset(10)
+            make.width.equalToSuperview()
+            make.height.greaterThanOrEqualTo(180)
+        }
+        overviewView.snp.makeConstraints { make in
+            make.top.equalTo(movieTitleView.snp.bottom).offset(10)
+            make.width.equalToSuperview()
+            make.height.greaterThanOrEqualTo(200)
+        }
+        collectionView.snp.makeConstraints { make in
+            make.top.equalTo(overviewView.snp.bottom)
+            make.width.equalToSuperview()
+            make.height.equalTo(500)
+        }
+        
+    }
+    
+}
 
 //MARK: - Collection View
 

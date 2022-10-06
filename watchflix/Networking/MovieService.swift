@@ -157,7 +157,6 @@ final class MovieService {
                 do {
                     let response = try JSONDecoder().decode(CastResponse.self, from: data)
                     let cast = response.cast
-                    print(cast)
                     completion(.success(cast))
                 }
                 catch {

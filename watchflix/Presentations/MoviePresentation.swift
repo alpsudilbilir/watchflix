@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct MovieViewModel {
+struct MoviePresentation {
     let id: Int
     let title: String
     let movieImage: String

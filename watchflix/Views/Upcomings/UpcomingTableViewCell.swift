@@ -63,7 +63,7 @@ class UpcomingTableViewCell: UITableViewCell {
     }
     
     
-    func configure(with viewModel: UpcomingsViewModel) {
+    func configure(with viewModel: UpcomingsPresentation) {
         
         movieTitleLabel.text = viewModel.title
         movieOverview.text = viewModel.overview

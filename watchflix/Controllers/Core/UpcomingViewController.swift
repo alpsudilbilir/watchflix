@@ -10,7 +10,7 @@ import UIKit
 class UpcomingViewController: UIViewController {
     
     private var upcomingMovies = [Movie]()
-    private var viewModels = [UpcomingsViewModel]()
+    private var viewModels = [UpcomingsPresentation]()
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(UpcomingTableViewCell.self, forCellReuseIdentifier: UpcomingTableViewCell.identifier)
@@ -34,7 +34,7 @@ class UpcomingViewController: UIViewController {
                 DispatchQueue.main.async {
                     strongSelf.upcomingMovies = upcomings.reversed()
                     strongSelf.viewModels.append(contentsOf: strongSelf.upcomingMovies.compactMap({
-                        return UpcomingsViewModel(
+                        return UpcomingsPresentation(
                             title: $0.title,
                             movieImage: $0.poster_path ?? "-",
                             overview: $0.overview)
@@ -49,7 +49,9 @@ class UpcomingViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        tableView.frame = view.bounds
+        tableView.snp.makeConstraints { make in
+            make.edges.equalTo(view)
+        }
     }
     
 

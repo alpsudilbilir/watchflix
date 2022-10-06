@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct UpcomingsViewModel {
+struct UpcomingsPresentation {
     let title: String
     let movieImage: String
     let overview: String

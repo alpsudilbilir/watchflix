@@ -5,15 +5,16 @@
 //  Created by Alpsu Dilbilir on 6.09.2022.
 //
 
+import SnapKit
 import UIKit
 
 enum BrowseSectionType {
-    case popularMovies(viewModel: [MovieViewModel])
-    case trendingMovies(viewModel: [MovieViewModel])
-    case topRatedMovies(viewModel: [MovieViewModel])
-    case popularShows(viewModel: [MovieViewModel])
-    case topRatedShows(viewModel: [MovieViewModel])
-    case nowPlayings(viewModel: [MovieViewModel])
+    case popularMovies(viewModel: [MoviePresentation])
+    case trendingMovies(viewModel: [MoviePresentation])
+    case topRatedMovies(viewModel: [MoviePresentation])
+    case popularShows(viewModel: [MoviePresentation])
+    case topRatedShows(viewModel: [MoviePresentation])
+    case nowPlayings(viewModel: [MoviePresentation])
     
 }
 
@@ -45,7 +46,9 @@ class HomeViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        collectionView.frame = view.bounds
+        collectionView.snp.makeConstraints { make in
+            make.edges.equalTo(view)
+        }
     }
     
     func setupNavigationBar() {
@@ -179,38 +182,38 @@ class HomeViewController: UIViewController {
     }
     private func configureSections() {
         self.sections.append(.popularMovies(viewModel: self.popularMovies.map({
-            return MovieViewModel(
+            return MoviePresentation(
                 id: $0.id,
                 title: $0.title,
                 movieImage: $0.poster_path ?? "-")
         })))
         self.sections.append(.trendingMovies(viewModel: self.trendingMovies.map({
-            return MovieViewModel(
+            return MoviePresentation(
                 id: $0.id,
                 title: $0.title,
                 movieImage: $0.poster_path ?? "-")
         })))
         self.sections.append(.topRatedMovies(viewModel: self.topRatedMovies.map({
-            return MovieViewModel(
+            return MoviePresentation(
                 id: $0.id,
                 title: $0.title,
                 movieImage: $0.poster_path ?? "-")
         })))
         self.sections.append(.popularShows(viewModel: self.popularShows.map({
-            return MovieViewModel(
+            return MoviePresentation(
                 id: $0.id,
                 title: $0.name,
                 movieImage: $0.poster_path ?? "-")
         })))
 
         self.sections.append(.topRatedShows(viewModel: self.topRatedShows.map({
-            return MovieViewModel(
+            return MoviePresentation(
                 id: $0.id,
                 title: $0.name,
                 movieImage: $0.poster_path ?? "-")
         })))
         self.sections.append(.nowPlayings(viewModel: self.nowPlayingMovies.map({
-            return MovieViewModel(
+            return MoviePresentation(
                 id: $0.id,
                 title: $0.title,
                 movieImage: $0.poster_path ?? "-")
