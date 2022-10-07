@@ -45,7 +45,25 @@ final class MovieService {
             task.resume()
         }
     }
-    
+    func getSimilarMovies(id: Int, completion: @escaping (Result<[Movie], Error>) -> Void) {
+        createRequest(with: URL(string: APIConstants.BASE_URL + "/movie/\(id)/" + Endpoints.SIMILAR_MOVIES + APIConstants.API_KEY), type: .GET) { request in
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data else {
+                    print(APISettings.APIError.failedToGetData)
+                    return
+                }
+                do {
+                    let response = try JSONDecoder().decode(MovieResponse.self, from: data)
+                    let similarMovies = response.results
+                    completion(.success(similarMovies))
+                }
+                catch {
+                    print(error.localizedDescription)
+                }
+            }
+            task.resume()
+        }
+    }
     func getPopularMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
         createRequest(with: URL(string: APIConstants.BASE_URL + Endpoints.POPULAR_MOVIES + APIConstants.API_KEY + "&page=\(APIConstants.PAGE)"), type: .GET) { request in
             let task = URLSession.shared.dataTask(with: request) { data, response, error in

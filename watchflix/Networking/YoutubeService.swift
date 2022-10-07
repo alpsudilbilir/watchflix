@@ -16,11 +16,8 @@ final class YoutubeService {
     private init() { }
     
     func getTrailer(with query: String, completion: @escaping (Result<Video, Error>) -> Void) {
-        
         let trimmedQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
-        
         guard let query = trimmedQuery.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else { return }
-        
         guard let url = URL(string: YoutubeAPIConstants.BASE_URL + YoutubeAPIConstants.SEARCH + "q=\(query)&" + YoutubeAPIConstants.YOUTUBE_API_KEY) else { return }
         
         let request = URLRequest(url: url)

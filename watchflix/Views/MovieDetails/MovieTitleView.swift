@@ -13,7 +13,7 @@ class MovieTitleView: UIView {
     
     private let movieImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "app-logo")
+        imageView.image = UIImage()
         imageView.layer.borderWidth = 1.0
         imageView.layer.borderColor = UIColor.yellow.cgColor
         imageView.contentMode = .scaleToFill
