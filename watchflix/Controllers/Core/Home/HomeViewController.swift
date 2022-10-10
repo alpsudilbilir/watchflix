@@ -17,17 +17,16 @@ enum BrowseSectionType {
     case nowPlayings(viewModel: [MoviePresentation])
     
 }
-
 class HomeViewController: UIViewController {
     var sections = [BrowseSectionType]()
     
-     var popularMovies = [Movie]()
-     var trendingMovies = [Movie]()
-     var topRatedMovies = [Movie]()
-     var nowPlayingMovies = [Movie]()
-
-     var popularShows = [TV]()
-     var topRatedShows = [TV]()
+    var popularMovies = [Movie]()
+    var trendingMovies = [Movie]()
+    var topRatedMovies = [Movie]()
+    var nowPlayingMovies = [Movie]()
+    
+    var popularShows = [TV]()
+    var topRatedShows = [TV]()
     
     private var collectionView = UICollectionView(
         frame: .zero,
@@ -50,7 +49,16 @@ class HomeViewController: UIViewController {
             make.edges.equalTo(view)
         }
     }
-    
+    private func setupCollectionView() {
+        view.addSubview(collectionView)
+        collectionView.backgroundColor = .secondarySystemBackground
+        collectionView.alwaysBounceVertical = true
+        collectionView.alwaysBounceHorizontal = false
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
+        collectionView.register(SectionHeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderCollectionReusableView.identifier)
+    }
     func setupNavigationBar() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "list.dash"),
@@ -69,14 +77,6 @@ class HomeViewController: UIViewController {
     }
     @objc func didTapMenuButton() { }
     @objc func didTapProfileButton() { }
-    private func setupCollectionView() {
-        view.addSubview(collectionView)
-        collectionView.backgroundColor = .secondarySystemBackground
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
-        collectionView.register(SectionHeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderCollectionReusableView.identifier)
-    }
     private func alert() {
         let alert = UIAlertController(title: "Network Error", message: "Check your internet connection and try again.", preferredStyle: .alert)
         let tryAgain = UIAlertAction(title: "Try again", style: .default) { _ in
@@ -85,99 +85,85 @@ class HomeViewController: UIViewController {
         let cancel = UIAlertAction(title: "Cancel", style: .cancel)
         alert.addAction(tryAgain)
         alert.addAction(cancel)
-        
         present(alert, animated: true)
-        
     }
     private func fetchMovies() {
-        let group = DispatchGroup()
-        group.enter()
-        group.enter()
-        group.enter()
-        group.enter()
-        group.enter()
-        group.enter()
-        while APIConstants.PAGE < 4 {
-            MovieService.shared.getPopularMovies{ [weak self] result in
-                
-                guard let strongSelf = self else { return }
-                switch result {
-                case .success(let popularMovies):
-                    strongSelf.popularMovies += popularMovies
-                case .failure(let error):
+        MovieService.shared.getPopularMovies{ [weak self] result in
+            guard let strongSelf = self else { return }
+            switch result {
+            case .success(let popularMovies):
+                strongSelf.popularMovies += popularMovies
+            case .failure(let error):
+                DispatchQueue.main.async {
                     print(error.localizedDescription)
                     self?.alert()
                 }
             }
-            
-            
-            MovieService.shared.getTrendingMovies { [weak self] result in
-                guard let strongSelf = self else { return }
-                switch result {
-                case .success(let trendingMovies):
-                    strongSelf.trendingMovies += trendingMovies
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    self?.alert()
-                }
-            }
-            MovieService.shared.getTopRatedMovies { [weak self] result in
-                guard let strongSelf = self else { return }
-                switch result {
-                case .success(let topMovies):
-                    strongSelf.topRatedMovies += topMovies
-                    
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    self?.alert()
-                }
-            }
-            MovieService.shared.getPopularSeries { [weak self] result in
-                guard let strongSelf = self else { return }
-                switch result {
-                case .success(let popularSeries):
-                    strongSelf.popularShows += popularSeries
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    self?.alert()
-                }
-            }
-
-            MovieService.shared.getTopRatedSeries { [weak self] result in
-                guard let strongSelf = self else { return }
-                switch result {
-                case .success(let topRatedSeries):
-                    strongSelf.topRatedShows += topRatedSeries
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    self?.alert()
-                }
-            }
-            MovieService.shared.getNowPlayings { [weak self] result in
-                guard let strongSelf = self else { return }
-                switch result {
-                case .success(let nowPlayings):
-                    strongSelf.nowPlayingMovies += nowPlayings
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    self?.alert()
-                }
-            }
-            APIConstants.PAGE += 1
         }
-        group.leave()
-        group.leave()
-        group.leave()
-        group.leave()
-        group.leave()
-        group.leave()
+        MovieService.shared.getTrendingMovies { [weak self] result in
+            guard let strongSelf = self else { return }
+            switch result {
+            case .success(let trendingMovies):
+                strongSelf.trendingMovies += trendingMovies
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    print(error.localizedDescription)
+                    self?.alert()
+                }
+            }
+        }
+        MovieService.shared.getTopRatedMovies { [weak self] result in
+            guard let strongSelf = self else { return }
+            switch result {
+            case .success(let topMovies):
+                strongSelf.topRatedMovies += topMovies
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    print(error.localizedDescription)
+                    self?.alert()
+                }
+            }
+        }
+        MovieService.shared.getPopularSeries { [weak self] result in
+            guard let strongSelf = self else { return }
+            switch result {
+            case .success(let popularSeries):
+                strongSelf.popularShows += popularSeries
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    print(error.localizedDescription)
+                    self?.alert()
+                }
+            }
+        }
         
-        group.notify(queue: .main) {
-            
+        MovieService.shared.getTopRatedSeries { [weak self] result in
+            guard let strongSelf = self else { return }
+            switch result {
+            case .success(let topRatedSeries):
+                strongSelf.topRatedShows += topRatedSeries
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    print(error.localizedDescription)
+                    self?.alert()
+                }
+            }
+        }
+        MovieService.shared.getNowPlayings { [weak self] result in
+            guard let strongSelf = self else { return }
+            switch result {
+            case .success(let nowPlayings):
+                strongSelf.nowPlayingMovies += nowPlayings
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    print(error.localizedDescription)
+                    self?.alert()
+                }
+            }
+        }
+        DispatchQueue.main.async {
             self.configureSections()
             self.collectionView.reloadData()
-            APIConstants.PAGE = 1
-            
         }
     }
     private func configureSections() {
@@ -205,7 +191,7 @@ class HomeViewController: UIViewController {
                 title: $0.name,
                 movieImage: $0.poster_path ?? "-")
         })))
-
+        
         self.sections.append(.topRatedShows(viewModel: self.topRatedShows.map({
             return MoviePresentation(
                 id: $0.id,

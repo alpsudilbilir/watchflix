@@ -8,7 +8,6 @@
 import UIKit
 
 class SectionHeaderCollectionReusableView: UICollectionReusableView {
-        
     static let identifier = "SectionHeaderCollectionReusableView"
     private let sectionTitleLabel : UILabel = {
         let label = UILabel()
@@ -17,12 +16,10 @@ class SectionHeaderCollectionReusableView: UICollectionReusableView {
         label.textColor = .label
         return label
     }()
-     
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(sectionTitleLabel)
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

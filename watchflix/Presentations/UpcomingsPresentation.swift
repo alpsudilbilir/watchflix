@@ -12,4 +12,5 @@ struct UpcomingsPresentation {
     let title: String
     let movieImage: String
     let overview: String
+    let releaseDate: String
 }

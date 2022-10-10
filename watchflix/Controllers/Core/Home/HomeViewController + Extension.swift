@@ -28,8 +28,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             return nowplayings.count
         }
     }
-    
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.identifier, for: indexPath) as? MovieCollectionViewCell else {
             return UICollectionViewCell()
@@ -134,8 +132,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
         return header
     }
-    
-
     
     static func createLayout(sectionIndex: Int) -> NSCollectionLayoutSection  {
         switch sectionIndex {

@@ -147,7 +147,8 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
                 id: $0.id,
                 title: $0.title,
                 overview: $0.overview,
-                poster_path: $0.poster_path ?? "-")
+                poster_path: $0.poster_path ?? "-",
+                release_date: nil)
         })))
     }
     
@@ -179,9 +180,6 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
             self.collectionView.reloadData()
         }
     }
-  
-
-    
     private func fetchMovie(by id: Int) {
         MovieService.shared.getById(with: id) { [weak self] result in
             DispatchQueue.main.async {
@@ -224,7 +222,6 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
         container.addSubview(movieTitleView)
         container.addSubview(overviewView)
         container.addSubview(collectionView)
-
         scrollView.snp.makeConstraints { make in
             make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
         }
@@ -238,7 +235,6 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
             make.height.equalTo(250)
             make.leading.equalToSuperview().offset(5)
             make.trailing.equalToSuperview().offset(-5)
-
         }
         movieTitleView.snp.makeConstraints { make in
             make.top.equalTo(webView.snp.bottom).offset(10)
@@ -259,7 +255,6 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
 }
 
 //MARK: - Collection View
-
 extension MovieDetailsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionType = sections[section]

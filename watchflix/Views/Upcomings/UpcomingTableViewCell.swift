@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class UpcomingTableViewCell: UITableViewCell {
     
@@ -14,7 +15,7 @@ class UpcomingTableViewCell: UITableViewCell {
     private let movieImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage()
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 10
         imageView.layer.masksToBounds = true
         return imageView
@@ -23,7 +24,7 @@ class UpcomingTableViewCell: UITableViewCell {
     
     private let movieTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 18, weight: .semibold)
+        label.font = .systemFont(ofSize: 22, weight: .semibold)
         label.textColor = .label
         label.numberOfLines = 0
         return label
@@ -32,7 +33,14 @@ class UpcomingTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .thin)
         label.textColor = .label
-        label.numberOfLines = 3
+        label.numberOfLines = 7
+        return label
+    }()
+    
+    private let dateLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 16, weight: .regular)
+        label.numberOfLines = 1
         return label
     }()
     
@@ -41,34 +49,43 @@ class UpcomingTableViewCell: UITableViewCell {
         contentView.addSubview(movieImageView)
         contentView.addSubview(movieTitleLabel)
         contentView.addSubview(movieOverview)
-        
+        contentView.addSubview(dateLabel)
+            constraintSubViews()
     }
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0))
+    
 
-        movieImageView.frame = CGRect(
-            x: 0, y: 0,
-            width: contentView.heigth,
-            height: contentView.heigth)
-        
-        movieTitleLabel.frame = CGRect(
-            x: movieImageView.rigth + 5, y: 0,
-            width: contentView.width - movieImageView.width - 4, height: 40)
-        
-        movieOverview.frame = CGRect(
-            x: movieImageView.rigth + 5,
-            y: movieTitleLabel.bottom,
-            width: contentView.width - movieImageView.width - 4, height: contentView.heigth - movieTitleLabel.heigth)
+     func constraintSubViews() {
+         movieImageView.snp.makeConstraints { make in
+             make.top.equalToSuperview()
+             make.leading.equalToSuperview()
+             make.width.equalTo(160)
+             make.height.equalToSuperview().offset(-10)
+         }
+         movieTitleLabel.snp.makeConstraints { make in
+             make.top.equalToSuperview().offset(5)
+             make.leading.equalTo(movieImageView.snp.trailing).offset(5)
+             make.trailing.equalToSuperview()
+
+
+         }
+         dateLabel.snp.makeConstraints { make in
+             make.top.equalTo(movieTitleLabel.snp.bottom).offset(5)
+             make.leading.equalTo(movieImageView.snp.trailing).offset(5)
+             make.trailing.equalToSuperview()
+         }
+         movieOverview.snp.makeConstraints { make in
+             make.top.equalTo(dateLabel.snp.bottom).offset(5)
+             make.leading.equalTo(movieImageView.snp.trailing).offset(5)
+             make.trailing.equalToSuperview()
+         }
     }
     
     
-    func configure(with viewModel: UpcomingsPresentation) {
-        
-        movieTitleLabel.text = viewModel.title
-        movieOverview.text = viewModel.overview
-        
-        movieImageView.sd_setImage(with: URL(string: APIConstants.BASE_IMAGE_URL + viewModel.movieImage))
+    func configure(with model: UpcomingsPresentation) {
+        movieImageView.sd_setImage(with: URL(string: APIConstants.BASE_IMAGE_URL + model.movieImage))
+        movieTitleLabel.text = model.title
+        movieOverview.text   = model.overview
+        dateLabel.text       =  model.releaseDate
     }
     
     required init?(coder: NSCoder) {
