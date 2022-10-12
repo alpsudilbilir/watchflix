@@ -20,7 +20,9 @@ class OverviewView: UIView {
         let label = UILabel()
         label.text = "Test"
         label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 16, weight: .thin)
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.9
+        label.font = .systemFont(ofSize: 16, weight: .light)
         return label
     }()
 

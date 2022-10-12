@@ -19,6 +19,7 @@ struct Endpoints {
     static let NOW_PLAYING = "/movie/now_playing?"
     static let CAST = "/credits?"
     static let SIMILAR_MOVIES = "/similar?"
+    static let SEARCH = "/search/multi?"
     //MARK: - TV
     
     static let POPULAR_TV = "/tv/popular?"

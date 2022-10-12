@@ -57,7 +57,7 @@ class UpcomingTableViewCell: UITableViewCell {
      func constraintSubViews() {
          movieImageView.snp.makeConstraints { make in
              make.top.equalToSuperview()
-             make.leading.equalToSuperview()
+             make.leading.equalToSuperview().offset(5)
              make.width.equalTo(160)
              make.height.equalToSuperview().offset(-10)
          }

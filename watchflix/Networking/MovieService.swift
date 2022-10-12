@@ -25,6 +25,24 @@ final class MovieService {
     
     //MARK: - Get Movies
     
+    func search(with query: String, completion: @escaping (Result<[Media], Error>) -> Void) {
+        createRequest(with: URL(string: APIConstants.BASE_URL + Endpoints.SEARCH + APIConstants.API_KEY + "&query=\(query)"), type: .GET) { request in
+            let task = URLSession.shared.dataTask(with: request) { data, _, error in
+                guard let data = data else {
+                    print(APISettings.APIError.failedToGetData)
+                    return
+                }
+                do {
+                    let response = try JSONDecoder().decode(SearchResponse.self, from: data)
+                    let mediaItems = response.results
+                    completion(.success(mediaItems))
+                } catch {
+                    completion(.failure(error))
+                }
+            }
+            task.resume()
+        }
+    }
     func getById(with id: Int, completion: @escaping (Result<MovieDetailsResponse, Error>) -> Void) {
         
         createRequest(with: URL(string: APIConstants.BASE_URL + Endpoints.MOVIE + "/\(id)?" + APIConstants.API_KEY), type: .GET) { request in

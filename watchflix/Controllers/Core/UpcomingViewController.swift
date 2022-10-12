@@ -28,6 +28,7 @@ class UpcomingViewController: UIViewController {
         tableView.backgroundColor = .secondarySystemBackground
         fetchUpcomings()
     }
+    
     private func fetchUpcomings() {
         MovieService.shared.getUpcomings { [weak self] result in
             guard let strongSelf = self else { return }
@@ -55,7 +56,7 @@ class UpcomingViewController: UIViewController {
                 return UpcomingsPresentation(
                     title: $0.title,
                     movieImage: $0.poster_path ?? "-",
-                    overview: $0.overview,
+                    overview: $0.overview ?? "Not Found",
                     releaseDate: self.formatDate(with: $0.release_date ?? "-"))
             }))
             self.tableView.reloadData()
