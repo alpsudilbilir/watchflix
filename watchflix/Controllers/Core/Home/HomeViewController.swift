@@ -52,6 +52,8 @@ class HomeViewController: UIViewController {
     private func setupCollectionView() {
         view.addSubview(collectionView)
         collectionView.backgroundColor = .secondarySystemBackground
+        collectionView.alwaysBounceVertical = true
+        collectionView.alwaysBounceHorizontal = false
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
@@ -86,11 +88,11 @@ class HomeViewController: UIViewController {
         present(alert, animated: true)
     }
     private func fetchMovies() {
-        MovieService.shared.request(for: .popular, type: MovieResponse.self) { [weak self] result in
+        MovieService.shared.getPopularMovies{ [weak self] result in
+            guard let strongSelf = self else { return }
             switch result {
-            case .success(let response):
-                let movies = response.results
-                self?.popularMovies += movies
+            case .success(let popularMovies):
+                strongSelf.popularMovies += popularMovies
             case .failure(let error):
                 DispatchQueue.main.async {
                     print(error.localizedDescription)
@@ -98,11 +100,11 @@ class HomeViewController: UIViewController {
                 }
             }
         }
-        MovieService.shared.request(for: .trending, type: MovieResponse.self) { [weak self] result in
+        MovieService.shared.getTrendingMovies { [weak self] result in
+            guard let strongSelf = self else { return }
             switch result {
-            case .success(let response):
-                let movies = response.results
-                self?.trendingMovies += movies
+            case .success(let trendingMovies):
+                strongSelf.trendingMovies += trendingMovies
             case .failure(let error):
                 DispatchQueue.main.async {
                     print(error.localizedDescription)
@@ -110,11 +112,11 @@ class HomeViewController: UIViewController {
                 }
             }
         }
-        MovieService.shared.request(for: .topRated, type: MovieResponse.self) { [weak self] result in
+        MovieService.shared.getTopRatedMovies { [weak self] result in
+            guard let strongSelf = self else { return }
             switch result {
-            case .success(let response):
-                let movies = response.results
-                self?.topRatedMovies += movies
+            case .success(let topMovies):
+                strongSelf.topRatedMovies += topMovies
             case .failure(let error):
                 DispatchQueue.main.async {
                     print(error.localizedDescription)
@@ -122,11 +124,11 @@ class HomeViewController: UIViewController {
                 }
             }
         }
-        MovieService.shared.request(for: .popularTV, type: TVResponse.self) { [weak self] result in
+        MovieService.shared.getPopularSeries { [weak self] result in
+            guard let strongSelf = self else { return }
             switch result {
-            case .success(let response):
-                let series = response.results
-                self?.popularShows += series
+            case .success(let popularSeries):
+                strongSelf.popularShows += popularSeries
             case .failure(let error):
                 DispatchQueue.main.async {
                     print(error.localizedDescription)
@@ -135,11 +137,11 @@ class HomeViewController: UIViewController {
             }
         }
         
-        MovieService.shared.request(for: .topRatedTV, type: TVResponse.self) { [weak self] result in
+        MovieService.shared.getTopRatedSeries { [weak self] result in
+            guard let strongSelf = self else { return }
             switch result {
-            case .success(let response):
-                let series = response.results
-                self?.topRatedShows += series
+            case .success(let topRatedSeries):
+                strongSelf.topRatedShows += topRatedSeries
             case .failure(let error):
                 DispatchQueue.main.async {
                     print(error.localizedDescription)
@@ -147,11 +149,11 @@ class HomeViewController: UIViewController {
                 }
             }
         }
-        MovieService.shared.request(for: .nowPlaying, type: MovieResponse.self) { [weak self] result in
+        MovieService.shared.getNowPlayings { [weak self] result in
+            guard let strongSelf = self else { return }
             switch result {
-            case .success(let response):
-                let movies = response.results
-                self?.nowPlayingMovies += movies
+            case .success(let nowPlayings):
+                strongSelf.nowPlayingMovies += nowPlayings
             case .failure(let error):
                 DispatchQueue.main.async {
                     print(error.localizedDescription)

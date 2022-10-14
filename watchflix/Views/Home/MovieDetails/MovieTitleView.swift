@@ -137,7 +137,7 @@ class MovieTitleView: UIView {
         userScoreLabel.text = "\(score)﹪"
         configureCircleStroke(with: percentageScore)
         //IMAGE
-        movieImageView.sd_setImage(with: URL(string: APIConstants.baseImageURL + model.poster_path))
+        movieImageView.sd_setImage(with: URL(string: APIConstants.BASE_IMAGE_URL + model.poster_path))
         //TITLE
         titleLabel.text = model.title
         //YEAR

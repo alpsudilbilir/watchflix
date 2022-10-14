@@ -56,7 +56,7 @@ class CastCollectionViewCell: UICollectionViewCell {
     
     func configure(with model: Cast) {
      
-        personImageView.sd_setImage(with: URL(string: APIConstants.baseImageURL + (model.profile_path ?? "-") ))
+        personImageView.sd_setImage(with: URL(string: APIConstants.BASE_IMAGE_URL + (model.profile_path ?? "-") ))
         nameLabel.text = "\(model.name)\n\(model.character)"
         nameLabel.textAlignment = .center
         nameLabel.sizeToFit()

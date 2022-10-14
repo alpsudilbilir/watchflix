@@ -9,21 +9,23 @@ import Foundation
 
 
 final class YoutubeService {
+    
+    
     static let shared = YoutubeService()
+    
     private init() { }
-    struct Constants {
-        static let baseURL        = "https://www.googleapis.com/youtube/v3"
-        static let ytApiKey       = "key=AIzaSyCSz4xq9hqDGgnaKDdUDtR970_jh6P08j8"
-        static let ytSearch       = "/search?"
-    }
+    
     func getTrailer(with query: String, completion: @escaping (Result<Video, Error>) -> Void) {
         let trimmedQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
         guard let query = trimmedQuery.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else { return }
-        guard let url = URL(string: Constants.baseURL + Constants.ytSearch + "q=\(query)&" + Constants.ytApiKey) else { return }
+        guard let url = URL(string: YoutubeAPIConstants.BASE_URL + YoutubeAPIConstants.SEARCH + "q=\(query)&" + YoutubeAPIConstants.YOUTUBE_API_KEY) else { return }
+        
         let request = URLRequest(url: url)
+        
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data else {
-                print("Failed to get youtube trailer")
+                print(APISettings.APIError.failedToGetData)
+                print("fail")
                 return
             }
             do {
