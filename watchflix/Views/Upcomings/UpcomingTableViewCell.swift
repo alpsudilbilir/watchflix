@@ -82,7 +82,7 @@ class UpcomingTableViewCell: UITableViewCell {
     
     
     func configure(with model: UpcomingsPresentation) {
-        movieImageView.sd_setImage(with: URL(string: APIConstants.BASE_IMAGE_URL + model.movieImage))
+        movieImageView.sd_setImage(with: URL(string: APIConstants.baseImageURL + model.movieImage))
         movieTitleLabel.text = model.title
         movieOverview.text   = model.overview
         dateLabel.text       =  model.releaseDate

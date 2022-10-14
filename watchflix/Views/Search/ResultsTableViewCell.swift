@@ -51,7 +51,7 @@ class ResultsTableViewCell: UITableViewCell {
     }
 
     func configure(with presentation: SearchPresentation) {
-        mediaImageView.sd_setImage(with: URL(string: APIConstants.BASE_IMAGE_URL + presentation.image))
+        mediaImageView.sd_setImage(with: URL(string: APIConstants.baseImageURL + presentation.image))
         titleLabel.text = presentation.title
         var type = presentation.type
         if type == "movie" {

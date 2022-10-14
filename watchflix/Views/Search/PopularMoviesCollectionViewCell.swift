@@ -32,7 +32,7 @@ class PopularMoviesCollectionViewCell: UICollectionViewCell {
         imageView.frame = contentView.bounds
     }
     func configure(with model: Movie) {
-        imageView.sd_setImage(with: URL(string: APIConstants.BASE_IMAGE_URL + (model.poster_path ?? "-") ))
+        imageView.sd_setImage(with: URL(string: APIConstants.baseImageURL + (model.poster_path ?? "-") ))
     }
     
 }
