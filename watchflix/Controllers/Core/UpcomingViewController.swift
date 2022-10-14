@@ -22,19 +22,21 @@ class UpcomingViewController: UIViewController {
         super.viewDidLoad()
         title = "Upcoming"
         view.backgroundColor = .secondarySystemBackground
+        configureTableView()
+        fetchUpcomings()
+    }
+    private func configureTableView() {
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = .secondarySystemBackground
-        fetchUpcomings()
     }
-    
     private func fetchUpcomings() {
-        MovieService.shared.getUpcomings { [weak self] result in
-            guard let strongSelf = self else { return }
+        MovieService.shared.request(for: .upcoming, type: MovieResponse.self) { [weak self] result in
             switch result {
-            case .success(let upcomings):
-                strongSelf.upcomingMovies = upcomings.reversed()
+            case .success(let response):
+                let upcomings = response.results
+                self?.upcomingMovies += upcomings
                 self?.configurePresentations()
             case .failure(let error):
                 print(error.localizedDescription)

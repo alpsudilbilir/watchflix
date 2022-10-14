@@ -52,7 +52,6 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
             section.orthogonalScrollingBehavior = .continuous
             section.boundarySupplementaryItems = sectionBoundaryItem
             return section
-            
         case 1: //Similar Movies Section
             let sectionBoundaryItem = [
                 NSCollectionLayoutBoundarySupplementaryItem(
@@ -152,32 +151,42 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
         let group = DispatchGroup()
         group.enter()
         group.enter()
-        MovieService.shared.getCast(with: movie.id) { [weak self] result in
+        MovieService.shared.request(with: movie.id, for: .cast, type: CastResponse.self) { [weak self] result in
             group.leave()
-            guard let strongSelf = self else { return }
                 switch result {
-                case .success(let cast):
+                case .success(let response):
+                    let cast = response.cast
                     self?.cast = cast
                 case .failure(let error):
                     print(error.localizedDescription)
                 }
         }
-        MovieService.shared.getSimilarMovies(id: movie.id) { [weak self] result in
+        MovieService.shared.request(with: movie.id, for: .similarMovies, type: MovieResponse.self) { [weak self] result in
             group.leave()
-                switch result {
-                case .success(let movies):
-                    self?.similarMovies = movies
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
+            switch result {
+            case .success(let response):
+                let movies = response.results
+                self?.similarMovies = movies
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
         }
+//        MovieService.shared.getSimilarMovies(id: movie.id) { [weak self] result in
+//            group.leave()
+//                switch result {
+//                case .success(let movies):
+//                    self?.similarMovies = movies
+//                case .failure(let error):
+//                    print(error.localizedDescription)
+//                }
+//        }
         group.notify(queue: .main) {
             self.configureSections()
             self.collectionView.reloadData()
         }
     }
     private func fetchMovie(by id: Int) {
-        MovieService.shared.getById(with: id) { [weak self] result in
+        MovieService.shared.request(with: id, for: nil, type: MovieDetailsResponse.self) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let movieDetails):

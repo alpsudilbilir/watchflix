@@ -33,6 +33,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
         movieImageView.frame = contentView.bounds
     }
     func configure(with model: MoviePresentation) {
-        movieImageView.sd_setImage(with: URL(string: APIConstants.BASE_IMAGE_URL + model.movieImage))
+        movieImageView.sd_setImage(with: URL(string: APIConstants.baseImageURL + model.movieImage))
     }
 }

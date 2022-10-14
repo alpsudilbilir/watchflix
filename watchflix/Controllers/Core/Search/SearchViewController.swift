@@ -43,18 +43,18 @@ class SearchViewController: UIViewController {
         searchController.searchResultsUpdater = self
     }
     private func fetchPopularMovies() {
-        MovieService.shared.getPopularMovies {[weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let movies):
-                    self?.popularMovies = movies
-                    self?.collectionView.reloadData()
-                case .failure(let error):
-                    print(error)
-                }
-            }
-       
-        }
+//        MovieService.shared.getPopularMovies {[weak self] result in
+//            DispatchQueue.main.async {
+//                switch result {
+//                case .success(let movies):
+//                    self?.popularMovies = movies
+//                    self?.collectionView.reloadData()
+//                case .failure(let error):
+//                    print(error)
+//                }
+//            }
+//
+//        }
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
