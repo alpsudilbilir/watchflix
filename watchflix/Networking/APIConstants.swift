@@ -9,15 +9,24 @@ import Foundation
 
 
 struct APIConstants {
-    static let BASE_URL  = "https://api.themoviedb.org/3"
-    static let API_KEY = "api_key=8df24f9e84528672bc08a89dca915351"
-    static let BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w500"
-    static var PAGE = 1
+    static let baseURL        = "https://api.themoviedb.org/3"
+    static let apiKey         = "api_key=8df24f9e84528672bc08a89dca915351"
+    static let baseImageURL   = "https://image.tmdb.org/t/p/w500"
+    static var page           = 1
+    static var pageString     = "&page=\(page)"
+}
+enum Endpoint: String {
+    case movie                = "/movie"
+    case popular              = "/movie/popular?"
+    case trending             = "/trending/movie/week?"
+    case topRated             = "/movie/top_rated?"
+    case upcoming             = "/movie/upcoming?"
+    case nowPlaying           = "/movie/now_playing?"
+    case popularTV            = "/tv/popular?"
+    case topRatedTV           = "/tv/top_rated?"
+    case latestTV             = "/tv/latest?"
+    case cast                 = "/credits?"
+    case similarMovies        = "/similar?"
+    case search               = "/search/multi?"
 }
 
-
-struct YoutubeAPIConstants {
-    static let YOUTUBE_API_KEY = "key=AIzaSyCSz4xq9hqDGgnaKDdUDtR970_jh6P08j8"
-    static let BASE_URL = "https://www.googleapis.com/youtube/v3"
-    static let SEARCH = "/search?"
-}
