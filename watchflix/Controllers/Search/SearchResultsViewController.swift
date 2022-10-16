@@ -6,16 +6,11 @@
 //
 
 import UIKit
-
 protocol SearchResultsViewControllerDelegate: AnyObject {
     func didTapResult(_ result: Media)
 }
-
 class SearchResultsViewController: UIViewController {
-    
-    
     weak var delegate: SearchResultsViewControllerDelegate?
-    
     var mediaItems = [Media]()
     var mediaPresentations = [SearchPresentation]()
     private let tableView: UITableView = {
@@ -32,13 +27,12 @@ class SearchResultsViewController: UIViewController {
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(ResultsTableViewCell.self, forCellReuseIdentifier: ResultsTableViewCell.identifier)
+        tableView.register(SearchResultsCell.self, forCellReuseIdentifier: SearchResultsCell.identifier)
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
     }
-    
     func update(with results: [Media]) {
         self.mediaItems = results
         mediaPresentations = results.compactMap({
@@ -54,9 +48,8 @@ extension SearchResultsViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return mediaItems.count
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ResultsTableViewCell.identifier, for: indexPath) as? ResultsTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultsCell.identifier, for: indexPath) as? SearchResultsCell else {
             return UITableViewCell()
         }
         let presentation = mediaPresentations[indexPath.row]
@@ -72,5 +65,4 @@ extension SearchResultsViewController: UITableViewDataSource, UITableViewDelegat
         print(result)
         delegate?.didTapResult(result)
     }
-    
 }

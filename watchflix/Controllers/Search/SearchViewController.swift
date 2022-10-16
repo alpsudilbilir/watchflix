@@ -9,6 +9,7 @@ import UIKit
 
 class SearchViewController: UIViewController {
     private var popularMovies = [Movie]()
+    private var presentations = [MoviePresentation]()
 
     private let searchController: UISearchController = {
         let vc = UISearchController(searchResultsController: SearchResultsViewController())
@@ -34,7 +35,7 @@ class SearchViewController: UIViewController {
         collectionView.backgroundColor = .secondarySystemBackground
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(PopularMoviesCollectionViewCell.self, forCellWithReuseIdentifier: PopularMoviesCollectionViewCell.identifier)
+        collectionView.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.identifier)
     }
     private func configureSearchController() {
         navigationItem.searchController = searchController
@@ -43,17 +44,21 @@ class SearchViewController: UIViewController {
         searchController.searchResultsUpdater = self
     }
     private func fetchPopularMovies() {
-        MovieService.shared.getPopularMovies {[weak self] result in
+        
+        MovieService.shared.request(for: .popular, type: MovieResponse.self) {[weak self] result in
+            switch result {
+            case .success(let response):
+                let movies = response.results
+                self?.popularMovies = movies
+                self?.presentations = movies.map({
+                    return MoviePresentation(id: $0.id, title: $0.title, movieImage: $0.poster_path ?? "-")
+                })
+            case .failure(let error):
+                print(error)
+             }
             DispatchQueue.main.async {
-                switch result {
-                case .success(let movies):
-                    self?.popularMovies = movies
-                    self?.collectionView.reloadData()
-                case .failure(let error):
-                    print(error)
-                }
+                self?.collectionView.reloadData()
             }
-       
         }
     }
     override func viewDidLayoutSubviews() {
@@ -67,10 +72,10 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         popularMovies.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PopularMoviesCollectionViewCell.identifier, for: indexPath) as? PopularMoviesCollectionViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.identifier, for: indexPath) as? MovieCell else {
             return UICollectionViewCell()
         }
-        let movie = popularMovies[indexPath.row]
+        let movie = presentations[indexPath.row]
         cell.configure(with: movie)
         return cell
     }
@@ -81,10 +86,10 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         navigationController?.pushViewController(vc, animated: true)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 180, height: 200)
+        return CGSize(width: 120, height: 150)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 2, left: 10, bottom: 2, right: 10)
+        return UIEdgeInsets(top: 2, left: 5, bottom: 2, right: 5)
     }
 }
 //MARK: - Search Controller Delegate

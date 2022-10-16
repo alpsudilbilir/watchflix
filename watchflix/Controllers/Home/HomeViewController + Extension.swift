@@ -29,7 +29,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.identifier, for: indexPath) as? MovieCollectionViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.identifier, for: indexPath) as? MovieCell else {
             return UICollectionViewCell()
         }
         let sectionType = sections[indexPath.section]
@@ -64,10 +64,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             let viewModel = viewModels[indexPath.row]
             cell.configure(with: viewModel)
             cell.backgroundColor = .secondarySystemBackground
-            return cell
-          
-
-            
+            return cell   
         }
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -111,8 +108,8 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let header = collectionView.dequeueReusableSupplementaryView(
             ofKind: kind,
-            withReuseIdentifier: SectionHeaderCollectionReusableView.identifier,
-            for: indexPath) as? SectionHeaderCollectionReusableView else {
+            withReuseIdentifier: SectionHeader.identifier,
+            for: indexPath) as? SectionHeader else {
             return UICollectionReusableView()
         }
         let sectionType = sections[indexPath.section]
@@ -131,51 +128,5 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             header.configure(with: "")
         }
         return header
-    }
-    
-    static func createLayout(sectionIndex: Int) -> NSCollectionLayoutSection  {
-        switch sectionIndex {
-        case 5:
-            
-            let item = NSCollectionLayoutItem(
-                layoutSize: NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .fractionalHeight(1)))
-            item.contentInsets = NSDirectionalEdgeInsets(
-                top: 10, leading: 3, bottom: 3, trailing: 3)
-            let group = NSCollectionLayoutGroup.horizontal(
-                layoutSize: NSCollectionLayoutSize(
-                    widthDimension: .absolute(400),
-                    heightDimension: .absolute(250)),
-                subitem: item,
-                count: 2)
-            let section = NSCollectionLayoutSection(group: group)
-            return section
-        default:
-            let sectionBoundaryItem = [
-                NSCollectionLayoutBoundarySupplementaryItem(
-                    layoutSize: NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(1),
-                        heightDimension: .absolute(40)),
-                    elementKind: UICollectionView.elementKindSectionHeader,
-                    alignment: .top),
-            ]
-            let item = NSCollectionLayoutItem(
-                layoutSize: NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .fractionalHeight(1)))
-            item.contentInsets = NSDirectionalEdgeInsets(
-                top: 3, leading: 3, bottom: 3, trailing: 3)
-            let group = NSCollectionLayoutGroup.horizontal(
-                layoutSize: NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(0.8),
-                    heightDimension: .absolute(200)),
-                subitem: item,
-                count: 2)
-            let section = NSCollectionLayoutSection(group: group)
-            section.orthogonalScrollingBehavior = .groupPaging
-            section.boundarySupplementaryItems = sectionBoundaryItem
-            return section
-        }
     }
 }

@@ -11,65 +11,28 @@ import SnapKit
 
 class MovieTitleView: UIView {
     
-    private let movieImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage()
-        imageView.layer.borderWidth = 1.0
-        imageView.layer.borderColor = UIColor.yellow.cgColor
-        imageView.contentMode = .scaleToFill
-        imageView.layer.masksToBounds = false
-        imageView.layer.cornerRadius = 25
-        imageView.clipsToBounds = true
-        return imageView
-    }()
-    
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 18, weight: .semibold)
-        return label
-    }()
-    
-    private let yearLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 14, weight: .regular)
-        return label
-    }()
-    
-    private let infoLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 14, weight: .regular)
-        return label
-    }()
-    
-    private let movieQuote: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.font = UIFont.italicSystemFont(ofSize: 14)
-        return label
-    }()
-
+    private let movieImageView = WFImageView(cornerRadius: 25, border: true, contentMode: .scaleToFill)
+    private let titleLabel     = WFTitleLabel()
+    private let yearLabel      = WFLabel(fontSize: 14, weight: .regular, textAlignment: .natural)
+    private let infoLabel      = WFLabel(fontSize: 14, weight: .regular, textAlignment: .natural)
+    private let movieQuote     = WFLabel(fontSize: 14, weight: .regular, textAlignment: .natural)
+    private let userScoreLabel = WFLabel(fontSize: 13, weight: .bold, textAlignment: .center)
     private let userScoreCirle: UIView = {
-        
         let roundView = UIView(frame: CGRectMake(20, 20, 40, 40))
         roundView.backgroundColor = UIColor.secondarySystemBackground
         roundView.layer.cornerRadius = roundView.width / 2
         return roundView
     }()
-    
-    
-    
-    private let userScoreLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .center
-        label.textColor = .label
-        label.font = .systemFont(ofSize: 13, weight: .bold)
-        return label
-    }()
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setupViews()
+        layoutViews()
+        
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    func setupViews() {
         addSubview(titleLabel)
         addSubview(movieImageView)
         addSubview(yearLabel)
@@ -77,13 +40,6 @@ class MovieTitleView: UIView {
         addSubview(userScoreCirle)
         addSubview(movieQuote)
         userScoreCirle.addSubview(userScoreLabel)
-        layoutViews()
-
-    }
-    
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     func layoutViews() {
         movieImageView.snp.makeConstraints { make in
@@ -128,8 +84,6 @@ class MovieTitleView: UIView {
         }
     }
     
-    
-    
     func configure(with model: MovieDetailsResponse) {
         //SCORE
         let score = Int(model.vote_average * 10.0) //6.7 -> 67
@@ -137,7 +91,7 @@ class MovieTitleView: UIView {
         userScoreLabel.text = "\(score)﹪"
         configureCircleStroke(with: percentageScore)
         //IMAGE
-        movieImageView.sd_setImage(with: URL(string: APIConstants.BASE_IMAGE_URL + model.poster_path))
+        movieImageView.sd_setImage(with: URL(string: APIConstants.baseImageURL + model.poster_path))
         //TITLE
         titleLabel.text = model.title
         //YEAR

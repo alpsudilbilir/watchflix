@@ -9,7 +9,6 @@ import Foundation
 
 
 struct SearchPresentation {
-    
     let title: String
     let image: String
     let type: String

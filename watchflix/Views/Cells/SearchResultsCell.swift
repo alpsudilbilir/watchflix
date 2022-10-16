@@ -8,35 +8,17 @@
 import UIKit
 import SnapKit
 import SDWebImage
-class ResultsTableViewCell: UITableViewCell {
+class SearchResultsCell: UITableViewCell {
     static let identifier = "ResultsTableViewCell"
-    private var mediaImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage()
-        imageView.contentMode = .scaleToFill
-        imageView.layer.cornerRadius = 10
-        imageView.layer.masksToBounds = true
-        imageView.layer.shadowRadius = 100
-        imageView.layer.shadowColor = UIColor.systemYellow.cgColor
-        return imageView
-    }()
+    
+    private let mediaImageView = WFImageView(cornerRadius: 10, border: false, contentMode: .scaleToFill)
+    private let titleLabel     = WFTitleLabel()
+    private let mediaTypeLabel = WFLabel(fontSize: 15, weight: .regular, textAlignment: .natural)
     private let playSymbol: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "play.circle", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))
         imageView.tintColor = .label
         return imageView
-    }()
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 18, weight: .semibold)
-        label.numberOfLines = 0
-        return label
-    }()
-    private let mediaTypeLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 15, weight: .regular)
-        label.numberOfLines = 0
-        return label
     }()
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -49,7 +31,6 @@ class ResultsTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
     func configure(with presentation: SearchPresentation) {
         mediaImageView.sd_setImage(with: URL(string: APIConstants.baseImageURL + presentation.image))
         titleLabel.text = presentation.title
@@ -61,7 +42,6 @@ class ResultsTableViewCell: UITableViewCell {
         }
         mediaTypeLabel.text = "\(type)"
     }
-    
     func constraintViews() {
         let offset = 5
         mediaImageView.snp.makeConstraints { make in
@@ -83,9 +63,6 @@ class ResultsTableViewCell: UITableViewCell {
         playSymbol.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.trailing.equalToSuperview().offset(-20)
-            
         }
-        
     }
-    
 }

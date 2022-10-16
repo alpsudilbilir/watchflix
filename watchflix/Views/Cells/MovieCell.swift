@@ -7,22 +7,13 @@
 
 import UIKit
 import SDWebImage
-class MovieCollectionViewCell: UICollectionViewCell {
-    
+class MovieCell: UICollectionViewCell {
     static let identifier = "MovieCollectionViewCell"
     
-    private let movieImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage()
-        imageView.clipsToBounds = true
-        imageView.contentMode = .scaleToFill
-        return imageView
-    }()
-
+    private let movieImageView = WFImageView(cornerRadius: 8, border: false, contentMode: .scaleToFill)
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.layer.cornerRadius = 8
-        contentView.layer.masksToBounds = true
         contentView.addSubview(movieImageView)
     }
     required init?(coder: NSCoder) {
@@ -33,6 +24,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
         movieImageView.frame = contentView.bounds
     }
     func configure(with model: MoviePresentation) {
-        movieImageView.sd_setImage(with: URL(string: APIConstants.BASE_IMAGE_URL + model.movieImage))
+        movieImageView.sd_setImage(with: URL(string: APIConstants.baseImageURL + model.movieImage))
     }
 }

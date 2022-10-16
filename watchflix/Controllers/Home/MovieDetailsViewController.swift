@@ -26,70 +26,9 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
     private let movieTitleView = MovieTitleView()
     private let overviewView = OverviewView()
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewCompositionalLayout(sectionProvider: { sectionIndex, _ in
-        switch sectionIndex {
-        case 0: //Cast Section
-            let sectionBoundaryItem = [
-                NSCollectionLayoutBoundarySupplementaryItem(
-                    layoutSize: NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(1),
-                        heightDimension: .absolute(40)),
-                    elementKind: UICollectionView.elementKindSectionHeader,
-                    alignment: .top),
-            ]
-            let item = NSCollectionLayoutItem(
-                layoutSize: NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .fractionalHeight(1)))
-            item.contentInsets = NSDirectionalEdgeInsets(
-                top: 3, leading: 5, bottom: 3, trailing: 5)
-            let group = NSCollectionLayoutGroup.horizontal(
-                layoutSize: NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(0.8),
-                    heightDimension: .absolute(250)),
-                subitem: item,
-                count: 2)
-            let section = NSCollectionLayoutSection(group: group)
-            section.orthogonalScrollingBehavior = .continuous
-            section.boundarySupplementaryItems = sectionBoundaryItem
-            return section
-            
-        case 1: //Similar Movies Section
-            let sectionBoundaryItem = [
-                NSCollectionLayoutBoundarySupplementaryItem(
-                    layoutSize: NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(1),
-                        heightDimension: .absolute(40)),
-                    elementKind: UICollectionView.elementKindSectionHeader,
-                    alignment: .top),
-            ]
-            let item = NSCollectionLayoutItem(
-                layoutSize: NSCollectionLayoutSize(
-                    widthDimension: .absolute(220),
-                    heightDimension: .absolute(180)))
-            item.contentInsets = NSDirectionalEdgeInsets(
-                top: 5, leading: 5, bottom: 5, trailing: 5)
-            let group = NSCollectionLayoutGroup.horizontal(
-                layoutSize: NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .fractionalHeight(1)),
-                subitem: item,
-                count: 3)
-            let verticalGroup = NSCollectionLayoutGroup.vertical(
-                layoutSize: NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .absolute(380)),
-                subitem: group,
-                count: 2)
-            let section = NSCollectionLayoutSection(group: verticalGroup)
-            section.orthogonalScrollingBehavior = .groupPaging
-            section.boundarySupplementaryItems = sectionBoundaryItem
-            return section
-        default:
-            return nil
-        }
+        layoutMovieDetailsCollectionView(sectionIndex: sectionIndex)
     }))
-    
-    //MARK: - Initializing
+    //MARK: - Init
     private var cast = [Cast]()
     private var similarMovies = [Movie]()
     let movie: Movie
@@ -119,9 +58,9 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
         collectionView.backgroundColor = .secondarySystemBackground
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(CastCollectionViewCell.self, forCellWithReuseIdentifier: CastCollectionViewCell.identifier)
-        collectionView.register(SectionHeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderCollectionReusableView.identifier)
-        collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
+        collectionView.register(CastCell.self, forCellWithReuseIdentifier: CastCell.identifier)
+        collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.identifier)
+        collectionView.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.identifier)
     }
     private func configureWebView() {
         webView.layer.masksToBounds = true
@@ -135,7 +74,7 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
                 character: $0.character,
                 name: $0.name,
                 order: $0.order,
-                profile_path: $0.profile_path)
+                profile_path: $0.profile_path, id: $0.id)
             
         })))
         self.sections.append(.similarMovies(model: self.similarMovies.map({
@@ -152,24 +91,25 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
         let group = DispatchGroup()
         group.enter()
         group.enter()
-        MovieService.shared.getCast(with: movie.id) { [weak self] result in
+        MovieService.shared.request(with: movie.id, for: .cast, type: CastResponse.self) { [weak self] result in
             group.leave()
-            guard let strongSelf = self else { return }
-                switch result {
-                case .success(let cast):
-                    self?.cast = cast
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
+            switch result {
+            case .success(let response):
+                let cast = response.cast
+                self?.cast = cast
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
         }
-        MovieService.shared.getSimilarMovies(id: movie.id) { [weak self] result in
+        MovieService.shared.request(with: movie.id, for: .similarMovies, type: MovieResponse.self) { [weak self] result in
             group.leave()
-                switch result {
-                case .success(let movies):
-                    self?.similarMovies = movies
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
+            switch result {
+            case .success(let response):
+                let movies = response.results
+                self?.similarMovies = movies
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
         }
         group.notify(queue: .main) {
             self.configureSections()
@@ -177,7 +117,7 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
         }
     }
     private func fetchMovie(by id: Int) {
-        MovieService.shared.getById(with: id) { [weak self] result in
+        MovieService.shared.request(with: id, for: nil, type: MovieDetailsResponse.self) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let movieDetails):
@@ -235,7 +175,7 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
         movieTitleView.snp.makeConstraints { make in
             make.top.equalTo(webView.snp.bottom).offset(10)
             make.width.equalToSuperview()
-            make.height.greaterThanOrEqualTo(180)
+            make.height.greaterThanOrEqualTo(200)
         }
         overviewView.snp.makeConstraints { make in
             make.top.equalTo(movieTitleView.snp.bottom).offset(10)
@@ -270,7 +210,7 @@ extension MovieDetailsViewController: UICollectionViewDelegate, UICollectionView
         let sectionType = sections[indexPath.section]
         switch sectionType {
         case .cast(let cast):
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCollectionViewCell.identifier, for: indexPath) as? CastCollectionViewCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CastCell.identifier, for: indexPath) as? CastCell else {
                 return UICollectionViewCell()
             }
             let person = cast[indexPath.row]
@@ -279,7 +219,7 @@ extension MovieDetailsViewController: UICollectionViewDelegate, UICollectionView
             cell.layer.cornerRadius = 18
             return cell
         case .similarMovies(let movies):
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.identifier, for: indexPath) as? MovieCollectionViewCell else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.identifier, for: indexPath) as? MovieCell else {
                 return UICollectionViewCell()
             }
             let movie = similarMovies[indexPath.row]
@@ -287,11 +227,27 @@ extension MovieDetailsViewController: UICollectionViewDelegate, UICollectionView
             return cell
         }
     }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        let section = sections[indexPath.section]
+        switch section {
+        case .similarMovies:
+            let movie = similarMovies[indexPath.row]
+            let vc = MovieDetailsViewController(movie: movie)
+            navigationController?.pushViewController(vc, animated: true)
+        case .cast:
+            let personID = cast[indexPath.row].id
+            let vc = PersonViewController(personID: personID)
+            navigationController?.modalPresentationStyle = .formSheet
+            navigationController?.present(vc, animated: true)
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let header = collectionView.dequeueReusableSupplementaryView(
             ofKind: kind,
-            withReuseIdentifier: SectionHeaderCollectionReusableView.identifier,
-            for: indexPath) as? SectionHeaderCollectionReusableView else {
+            withReuseIdentifier: SectionHeader.identifier,
+            for: indexPath) as? SectionHeader else {
             return UICollectionReusableView()
         }
         let sectionType = sections[indexPath.section]
@@ -299,7 +255,7 @@ extension MovieDetailsViewController: UICollectionViewDelegate, UICollectionView
         case .cast:
             header.configure(with: "Cast")
         case .similarMovies:
-            header.configure(with: "Similar Movies")
+            header.configure(with: "Similar")
         }
         return header
     }

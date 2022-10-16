@@ -7,15 +7,9 @@
 
 import UIKit
 
-class SectionHeaderCollectionReusableView: UICollectionReusableView {
+class SectionHeader: UICollectionReusableView {
     static let identifier = "SectionHeaderCollectionReusableView"
-    private let sectionTitleLabel : UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 1
-        label.font = .systemFont(ofSize: 18, weight: .bold)
-        label.textColor = .label
-        return label
-    }()
+    private let sectionTitleLabel = WFTitleLabel()
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(sectionTitleLabel)
@@ -23,7 +17,6 @@ class SectionHeaderCollectionReusableView: UICollectionReusableView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     override func layoutSubviews() {
         super.layoutSubviews()
         sectionTitleLabel.frame = CGRect(
@@ -32,11 +25,7 @@ class SectionHeaderCollectionReusableView: UICollectionReusableView {
             width: frame.size.width,
             height: 40)
     }
-    
     func configure(with title: String) {
         sectionTitleLabel.text = title
     }
-    
-    
-    
 }

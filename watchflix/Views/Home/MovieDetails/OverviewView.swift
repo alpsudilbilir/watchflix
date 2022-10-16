@@ -9,34 +9,17 @@ import UIKit
 
 class OverviewView: UIView {
     
-    private let overviewTitle: UILabel = {
-        let label = UILabel()
-        label.numberOfLines  = 1
-        label.text = "Overview"
-        label.font = .systemFont(ofSize: 18, weight: .semibold)
-        return label
-    }()
-    private let overviewLabel: UILabel =  {
-        let label = UILabel()
-        label.text = "Test"
-        label.numberOfLines = 0
-        label.adjustsFontSizeToFitWidth = true
-        label.minimumScaleFactor = 0.9
-        label.font = .systemFont(ofSize: 16, weight: .light)
-        return label
-    }()
-
+    private let overviewTitle = WFTitleLabel()
+    private let overviewLabel = WFLabel(fontSize: 16, weight: .light, textAlignment: .natural)
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(overviewTitle)
         addSubview(overviewLabel)
         layoutViews()
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     func layoutViews() {
         overviewTitle.snp.makeConstraints { make in
             make.left.equalTo(snp.left).offset(5)
@@ -50,6 +33,7 @@ class OverviewView: UIView {
         }
     }
     func configure(with model: MovieDetailsResponse) {
+        overviewTitle.text = "Overview"
         overviewLabel.text = model.overview
     }
     

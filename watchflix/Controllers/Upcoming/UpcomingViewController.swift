@@ -14,7 +14,7 @@ class UpcomingViewController: UIViewController {
     
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(UpcomingTableViewCell.self, forCellReuseIdentifier: UpcomingTableViewCell.identifier)
+        tableView.register(UpcomingsCell.self, forCellReuseIdentifier: UpcomingsCell.identifier)
         return tableView
     }()
 
@@ -30,17 +30,17 @@ class UpcomingViewController: UIViewController {
     }
     
     private func fetchUpcomings() {
-        MovieService.shared.getUpcomings { [weak self] result in
-            guard let strongSelf = self else { return }
-            switch result {
-            case .success(let upcomings):
-                strongSelf.upcomingMovies = upcomings.reversed()
-                self?.configurePresentations()
-            case .failure(let error):
-                print(error.localizedDescription)
+            MovieService.shared.request(for: .upcoming, type: MovieResponse.self) { [weak self] result in
+                switch result {
+                case .success(let response):
+                    let upcomings = response.results
+                    self?.upcomingMovies += upcomings
+                    self?.configurePresentations()
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
             }
         }
-    }
     private func formatDate(with date: String) -> String {
         let dateFormatterGet = DateFormatter()
         dateFormatterGet.dateFormat = "yyyy-MM-dd"
@@ -76,7 +76,7 @@ extension UpcomingViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: UpcomingTableViewCell.identifier, for: indexPath) as? UpcomingTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: UpcomingsCell.identifier, for: indexPath) as? UpcomingsCell else {
             return UITableViewCell()
         }
         cell.backgroundColor = .secondarySystemBackground

@@ -8,41 +8,13 @@
 import UIKit
 import SnapKit
 
-class UpcomingTableViewCell: UITableViewCell {
-    
+class UpcomingsCell: UITableViewCell {
     static let identifier = "UpcomingTableViewCell"
     
-    private let movieImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage()
-        imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 10
-        imageView.layer.masksToBounds = true
-        return imageView
-        
-    }()
-    
-    private let movieTitleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 22, weight: .semibold)
-        label.textColor = .label
-        label.numberOfLines = 0
-        return label
-    }()
-    private let movieOverview: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .thin)
-        label.textColor = .label
-        label.numberOfLines = 7
-        return label
-    }()
-    
-    private let dateLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 16, weight: .regular)
-        label.numberOfLines = 1
-        return label
-    }()
+    private let movieImageView  = WFImageView(cornerRadius: 10, border: false, contentMode: .scaleAspectFill)
+    private let movieTitleLabel = WFTitleLabel()
+    private let dateLabel       = WFLabel(fontSize: 18, weight: .regular, textAlignment: .natural)
+    private let movieOverview   = WFLabel(fontSize: 16, weight: .light, textAlignment: .natural)
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: nil)
@@ -52,9 +24,7 @@ class UpcomingTableViewCell: UITableViewCell {
         contentView.addSubview(dateLabel)
             constraintSubViews()
     }
-    
-
-     func constraintSubViews() {
+    func constraintSubViews() {
          movieImageView.snp.makeConstraints { make in
              make.top.equalToSuperview()
              make.leading.equalToSuperview().offset(5)
@@ -65,33 +35,27 @@ class UpcomingTableViewCell: UITableViewCell {
              make.top.equalToSuperview().offset(5)
              make.leading.equalTo(movieImageView.snp.trailing).offset(5)
              make.trailing.equalToSuperview()
-
-
          }
          dateLabel.snp.makeConstraints { make in
-             make.top.equalTo(movieTitleLabel.snp.bottom).offset(5)
+             make.top.equalTo(movieTitleLabel.snp.bottom).offset(2)
              make.leading.equalTo(movieImageView.snp.trailing).offset(5)
-             make.trailing.equalToSuperview()
+             make.trailing.equalToSuperview().offset(5)
+             make.height.equalTo(20)
          }
          movieOverview.snp.makeConstraints { make in
              make.top.equalTo(dateLabel.snp.bottom).offset(5)
              make.leading.equalTo(movieImageView.snp.trailing).offset(5)
-             make.trailing.equalToSuperview()
+             make.trailing.equalToSuperview().offset(-5)
+             make.bottom.equalToSuperview().offset(-5)
          }
     }
-    
-    
     func configure(with model: UpcomingsPresentation) {
         movieImageView.sd_setImage(with: URL(string: APIConstants.baseImageURL + model.movieImage))
         movieTitleLabel.text = model.title
         movieOverview.text   = model.overview
         dateLabel.text       =  model.releaseDate
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
-    
 }

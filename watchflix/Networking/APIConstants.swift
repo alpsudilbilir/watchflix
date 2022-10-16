@@ -28,5 +28,6 @@ enum Endpoint: String {
     case cast                 = "/credits?"
     case similarMovies        = "/similar?"
     case search               = "/search/multi?"
+    case person               = "/person"
 }
 
