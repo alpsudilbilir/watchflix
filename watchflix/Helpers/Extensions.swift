@@ -6,6 +6,38 @@
 //
 
 import UIKit
+import SnapKit
+
+fileprivate var containerView: UIView!
+
+
+extension UIViewController {
+    func showLoadingView() {
+        containerView = UIView(frame: view.bounds)
+        view.addSubview(containerView)
+        
+        containerView.backgroundColor = .secondarySystemBackground
+        containerView.alpha           = 0
+        UIView.animate(withDuration: 0.25, delay: 0) {
+            containerView.alpha = 0.8
+        }
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        containerView.addSubview(activityIndicator)
+        
+        activityIndicator.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+        }
+        activityIndicator.color = .systemYellow
+        activityIndicator.startAnimating()
+    }
+    
+    func dismissLoadingView() {
+        DispatchQueue.main.async {
+            containerView.removeFromSuperview()
+            containerView = nil
+        }
+    }
+}
 extension UIView {
     var width: CGFloat {
         return frame.size.width

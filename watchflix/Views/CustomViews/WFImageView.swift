@@ -26,7 +26,7 @@ class WFImageView: UIImageView {
         fatalError("init(coder:) has not been implemented")
     }
     private func configure() {
-        image              = UIImage()
+        image              = UIImage(named: "app-logo")
         clipsToBounds      = true
     }
 }

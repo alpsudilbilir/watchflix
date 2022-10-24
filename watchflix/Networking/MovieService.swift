@@ -7,8 +7,11 @@
 
 import Foundation
 final class MovieService {
+    
     static let shared = MovieService()
+    
     private init() { }
+    
     enum HTTPMethod: String {
         case GET
         case POST
@@ -20,7 +23,7 @@ final class MovieService {
         case invalidData
     }
     func request<T: Codable>(for endpoint: Endpoint, type: T.Type, completion: @escaping (Result<T, Error>) -> Void) {
-        let url = URL(string: APIConstants.baseURL + endpoint.rawValue + APIConstants.apiKey + APIConstants.pageString)
+        let url = URL(string: APIConstants.baseURL + endpoint.rawValue + APIConstants.apiKey + "&page=\(APIConstants.page)")
         guard let url = url else {
             completion(.failure(CustomError.badURL))
             return

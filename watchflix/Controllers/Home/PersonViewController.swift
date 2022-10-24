@@ -30,8 +30,6 @@ class PersonViewController: UIViewController {
         constraintViews()
         fetchPerson()
     }
-
-    
     private func setupViews() {
         view.addSubview(scrollView)
         scrollView.addSubview(personImageView)

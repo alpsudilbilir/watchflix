@@ -88,6 +88,7 @@ class HomeViewController: UIViewController {
         present(alert, animated: true)
     }
     private func fetchMovies() {
+        showLoadingView()
         MovieService.shared.request(for: .popular, type: MovieResponse.self) { [weak self] result in
             switch result {
             case .success(let response):
@@ -165,6 +166,7 @@ class HomeViewController: UIViewController {
             self.configureSections()
             self.collectionView.reloadData()
         }
+        dismissLoadingView()
     }
     private func configureSections() {
         self.sections.append(.popularMovies(viewModel: self.popularMovies.map({

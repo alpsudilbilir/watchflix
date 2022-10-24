@@ -9,31 +9,16 @@ import UIKit
 
 //MARK: - Home Collection View Layout
 func createLayout(sectionIndex: Int) -> NSCollectionLayoutSection  {
-    switch sectionIndex {
-    case 5:
-        let item = NSCollectionLayoutItem(
+    let sectionBoundaryItem = [
+        NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1),
-                heightDimension: .fractionalHeight(1)))
-        item.contentInsets = NSDirectionalEdgeInsets(
-            top: 10, leading: 3, bottom: 3, trailing: 3)
-        let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .absolute(400),
-                heightDimension: .absolute(250)),
-            subitem: item,
-            count: 2)
-        let section = NSCollectionLayoutSection(group: group)
-        return section
-    default:
-        let sectionBoundaryItem = [
-            NSCollectionLayoutBoundarySupplementaryItem(
-                layoutSize: NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1),
-                    heightDimension: .absolute(40)),
-                elementKind: UICollectionView.elementKindSectionHeader,
-                alignment: .top),
-        ]
+                heightDimension: .absolute(40)),
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .top),
+    ]
+    switch sectionIndex {
+    case 0, 1, 2, 3, 4:
         let item = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1),
@@ -47,9 +32,27 @@ func createLayout(sectionIndex: Int) -> NSCollectionLayoutSection  {
             subitem: item,
             count: 2)
         let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .groupPaging
+        section.orthogonalScrollingBehavior = .continuous
         section.boundarySupplementaryItems = sectionBoundaryItem
         return section
+    default:
+        let item = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1),
+                heightDimension: .fractionalHeight(1)))
+        item.contentInsets = NSDirectionalEdgeInsets(
+            top: 5, leading: 5, bottom: 5, trailing: 5)
+        let group = NSCollectionLayoutGroup.horizontal(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1),
+                heightDimension: .absolute(250)),
+            subitem: item,
+            count: 2)
+        let section = NSCollectionLayoutSection(group: group)
+        section.boundarySupplementaryItems = sectionBoundaryItem
+
+        return section
+
     }
 }
 //MARK: - Movie Collection View Layout

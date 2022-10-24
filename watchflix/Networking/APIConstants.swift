@@ -13,7 +13,6 @@ struct APIConstants {
     static let apiKey         = "api_key=8df24f9e84528672bc08a89dca915351"
     static let baseImageURL   = "https://image.tmdb.org/t/p/w500"
     static var page           = 1
-    static var pageString     = "&page=\(page)"
 }
 enum Endpoint: String {
     case movie                = "/movie"

@@ -1,17 +1,50 @@
 {
   "images" : [
     {
-      "filename" : "netflix_logo.png",
+      "filename" : "W (4) 5.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "netflix_logo-1.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "W (4).png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "W (4) 4.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "netflix_logo-2.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "W (4) 1.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "W (4) 3.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "W (4) 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

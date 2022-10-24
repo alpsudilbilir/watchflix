@@ -71,8 +71,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         collectionView.deselectItem(at: indexPath, animated: true)
         
         let section = sections[indexPath.section]
-        
-        var show: TV
+         var show: TV
         switch section {
         case .popularMovies:
              let movie = popularMovies[indexPath.row]
@@ -124,8 +123,8 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             header.configure(with: "Popular TV Series")
         case .topRatedShows:
             header.configure(with: "Top 20 ")
-        default:
-            header.configure(with: "")
+        case .nowPlayings:
+            header.configure(with: "Now Playings")
         }
         return header
     }
