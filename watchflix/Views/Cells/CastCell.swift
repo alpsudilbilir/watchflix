@@ -8,14 +8,18 @@
 import UIKit
 
 class CastCell: UICollectionViewCell {
+    
     static let identifier = "CastCollectionViewCell"
+    
     private let personImageView = WFImageView(cornerRadius: 16, border: false, contentMode: .scaleAspectFill)
     private let nameLabel       = WFLabel(fontSize: 13, weight: .medium, textAlignment: .left)
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(personImageView)
         contentView.addSubview(nameLabel)
     }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         personImageView.snp.makeConstraints { make in
@@ -28,15 +32,17 @@ class CastCell: UICollectionViewCell {
             make.top.equalTo(personImageView.snp.bottom)
         }
     }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     func configure(with model: Cast) {
         if let photo = model.profile_path {
             personImageView.sd_setImage(with: URL(string: APIConstants.baseImageURL + photo ))
         }
         
-        nameLabel.text = "\(model.name)\n\(model.character)"
+        nameLabel.text          = "\(model.name)\n\(model.character)"
         nameLabel.textAlignment = .center
         nameLabel.sizeToFit()
     }

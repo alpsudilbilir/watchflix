@@ -11,15 +11,16 @@ import SDWebImage
 class SearchResultsCell: UITableViewCell {
     static let identifier = "ResultsTableViewCell"
     
-    private let mediaImageView = WFImageView(cornerRadius: 10, border: false, contentMode: .scaleToFill)
-    private let titleLabel     = WFTitleLabel()
-    private let mediaTypeLabel = WFLabel(fontSize: 15, weight: .regular, textAlignment: .natural)
-    private let playSymbol: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "play.circle", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))
+    private let mediaImageView  = WFImageView(cornerRadius: 10, border: false, contentMode: .scaleToFill)
+    private let titleLabel      = WFTitleLabel()
+    private let mediaTypeLabel  = WFLabel(fontSize: 15, weight: .regular, textAlignment: .natural)
+    private let playSymbol      = {
+        let imageView       = UIImageView()
+        imageView.image     = UIImage(systemName: "play.circle", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 20)))
         imageView.tintColor = .label
         return imageView
     }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(mediaImageView)
@@ -28,19 +29,22 @@ class SearchResultsCell: UITableViewCell {
         contentView.addSubview(playSymbol)
         constraintViews()
     }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     func configure(with presentation: SearchPresentation) {
-        mediaImageView.sd_setImage(with: URL(string: APIConstants.baseImageURL + presentation.image))
-        titleLabel.text = presentation.title
         var type = presentation.type
         if type == "movie" {
             type = "Movie 🎬"
         } else {
             type = "TV Show 📺"
         }
+        titleLabel.text     = presentation.title
         mediaTypeLabel.text = "\(type)"
+        mediaImageView.sd_setImage(with: URL(string: APIConstants.baseImageURL + presentation.image))
+
     }
     func constraintViews() {
         let offset = 5

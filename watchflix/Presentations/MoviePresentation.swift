@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 struct MoviePresentation {
     let id: Int
     let title: String
