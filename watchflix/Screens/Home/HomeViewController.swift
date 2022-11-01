@@ -9,26 +9,26 @@ import SnapKit
 import UIKit
 
 enum BrowseSectionType {
-    case popularMovies(viewModel: [MoviePresentation])
-    case trendingMovies(viewModel: [MoviePresentation])
-    case topRatedMovies(viewModel: [MoviePresentation])
-    case popularShows(viewModel: [MoviePresentation])
-    case topRatedShows(viewModel: [MoviePresentation])
-    case nowPlayings(viewModel: [MoviePresentation])
-    
+    case popularMovies (presentations  : [MoviePresentation])
+    case trendingMovies(presentations  : [MoviePresentation])
+    case topRatedMovies(presentations  : [MoviePresentation])
+    case popularShows  (presentations  : [MoviePresentation])
+    case topRatedShows (presentations  : [MoviePresentation])
+    case nowPlayings   (presentations  : [MoviePresentation])
 }
+
 class HomeViewController: UIViewController {
-    var sections = [BrowseSectionType]()
     
-    var popularMovies = [Movie]()
-    var trendingMovies = [Movie]()
-    var topRatedMovies = [Movie]()
+    var sections         = [BrowseSectionType]()
+    
+    var popularMovies    = [Movie]()
+    var trendingMovies   = [Movie]()
+    var topRatedMovies   = [Movie]()
     var nowPlayingMovies = [Movie]()
+    var popularShows     = [TV]()
+    var topRatedShows    = [TV]()
     
-    var popularShows = [TV]()
-    var topRatedShows = [TV]()
-    
-    private var collectionView = UICollectionView(
+    private let collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: UICollectionViewCompositionalLayout(sectionProvider: { sectionIndex, _ -> NSCollectionLayoutSection? in
             return createLayout(sectionIndex: sectionIndex)
@@ -36,8 +36,8 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Home"
-        view.backgroundColor = .secondarySystemBackground
+        configureViewController()
+        setupViews()
         setupCollectionView()
         setupNavigationBar()
         fetchMovies()
@@ -49,161 +49,151 @@ class HomeViewController: UIViewController {
             make.edges.equalTo(view)
         }
     }
-    private func setupCollectionView() {
+    
+    private func configureViewController() {
+        title = "Home"
+        view.backgroundColor = .secondarySystemBackground
+    }
+    
+    private func setupViews() {
         view.addSubview(collectionView)
-        collectionView.backgroundColor = .secondarySystemBackground
-        collectionView.alwaysBounceVertical = true
+    }
+    
+
+    private func setupCollectionView() {
+        collectionView.backgroundColor        = .secondarySystemBackground
+        collectionView.alwaysBounceVertical   = true
         collectionView.alwaysBounceHorizontal = false
-        collectionView.delegate = self
-        collectionView.dataSource = self
+        collectionView.delegate               = self
+        collectionView.dataSource             = self
+        
         collectionView.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.identifier)
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.identifier)
     }
+    
     func setupNavigationBar() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "list.dash"),
-            style: .done,
-            target: self,
-            action: #selector(didTapMenuButton))
-        
-        let person = UIBarButtonItem(
-            image: UIImage(systemName: "person"),
-            style: .done,
-            target: self,
-            action: #selector(didTapProfileButton))
-        let logo = UIBarButtonItem(customView: UIImageView(image: UIImage(named: "bar_logo")))
-        
-        navigationItem.rightBarButtonItems = [logo, person]
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: UIImageView(image: Images.barLogo))
     }
-    @objc func didTapMenuButton() { }
-    @objc func didTapProfileButton() { }
-    private func alert() {
-        let alert = UIAlertController(title: "Network Error", message: "Check your internet connection and try again.", preferredStyle: .alert)
-        let tryAgain = UIAlertAction(title: "Try again", style: .default) { _ in
-            self.fetchMovies()
-        }
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel)
-        alert.addAction(tryAgain)
-        alert.addAction(cancel)
-        present(alert, animated: true)
-    }
+    
     private func fetchMovies() {
         showLoadingView()
+        let group = DispatchGroup()
+        group.enter()
+        group.enter()
+        group.enter()
+        group.enter()
+        group.enter()
+        group.enter()
         MovieService.shared.request(for: .popular, type: MovieResponse.self) { [weak self] result in
+            group.leave()
+            guard let self = self else { return }
             switch result {
             case .success(let response):
-                let movies = response.results
-                self?.popularMovies += movies
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    print(error.localizedDescription)
-                    self?.alert()
-                }
+                let movies          = response.results
+                self.popularMovies += movies
+            case .failure:
+                self.alert(title: "Network Error", message: "Unable to get movies", actionMessage: "Try again")
             }
         }
         MovieService.shared.request(for: .trending, type: MovieResponse.self) { [weak self] result in
+            group.leave()
+            guard let self = self else { return }
             switch result {
             case .success(let response):
-                let movies = response.results
-                self?.trendingMovies += movies
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    print(error.localizedDescription)
-                    self?.alert()
-                }
+                let movies           = response.results
+                self.trendingMovies += movies
+            case .failure:
+                self.alert(title: "Network Error", message: "Unable to get movies", actionMessage: "Try again")
             }
         }
         MovieService.shared.request(for: .topRated, type: MovieResponse.self) { [weak self] result in
+            group.leave()
+            guard let self = self else { return }
             switch result {
             case .success(let response):
-                let movies = response.results
-                self?.topRatedMovies += movies
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    print(error.localizedDescription)
-                    self?.alert()
-                }
+                let movies           = response.results
+                self.topRatedMovies += movies
+            case .failure:
+                self.alert(title: "Network Error", message: "Unable to get movies", actionMessage: "Try again")
             }
         }
-        MovieService.shared.request(for: .popularTV, type: TVResponse.self) { [weak self] result in
-            switch result {
-            case .success(let response):
-                let series = response.results
-                self?.popularShows += series
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    print(error.localizedDescription)
-                    
-                }
-            }
-        }
-        
-        MovieService.shared.request(for: .topRatedTV, type: TVResponse.self) { [weak self] result in
+        MovieService.shared.request(for: .popularTV, type: TVResponse.self) { [weak self] result in
+            group.leave()
+            guard let self = self else { return }
             switch result {
             case .success(let response):
                 let series = response.results
-                self?.topRatedShows += series
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    print(error.localizedDescription)
-                    self?.alert()
-                }
+                self.popularShows += series
+            case .failure:
+                self.alert(title: "Network Error", message: "Unable to get movies", actionMessage: "Try again")
             }
         }
-        MovieService.shared.request(for: .nowPlaying, type: MovieResponse.self) { [weak self] result in
+        MovieService.shared.request(for: .topRatedTV, type: TVResponse.self) { [weak self] result in
+            group.leave()
+            guard let self = self else { return }
+            switch result {
+            case .success(let response):
+                let series = response.results
+                self.topRatedShows += series
+            case .failure:
+                self.alert(title: "Network Error", message: "Unable to get movies", actionMessage: "Try again")
+            }
+        }
+        MovieService.shared.request(for: .nowPlaying, type: MovieResponse.self) { [weak self] result in
+            group.leave()
+            guard let self = self else { return }
             switch result {
             case .success(let response):
                 let movies = response.results
-                self?.nowPlayingMovies += movies
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    print(error.localizedDescription)
-                    self?.alert()
-                }
+                self.nowPlayingMovies += movies
+            case .failure:
+                self.alert(title: "Network Error", message: "Unable to get movies", actionMessage: "Try again")
+
             }
         }
-        DispatchQueue.main.async {
+        group.notify(queue: .main) {
             self.configureSections()
             self.collectionView.reloadData()
         }
         dismissLoadingView()
     }
+    
     private func configureSections() {
-        self.sections.append(.popularMovies(viewModel: self.popularMovies.map({
+        self.sections.append(.popularMovies(presentations: self.popularMovies.map({
             return MoviePresentation(
-                id: $0.id,
-                title: $0.title,
+                id        : $0.id,
+                title     : $0.title,
                 movieImage: $0.poster_path ?? "-")
         })))
-        self.sections.append(.trendingMovies(viewModel: self.trendingMovies.map({
+        self.sections.append(.trendingMovies(presentations: self.trendingMovies.map({
             return MoviePresentation(
-                id: $0.id,
-                title: $0.title,
+                id        : $0.id,
+                title     : $0.title,
                 movieImage: $0.poster_path ?? "-")
         })))
-        self.sections.append(.topRatedMovies(viewModel: self.topRatedMovies.map({
+        self.sections.append(.topRatedMovies(presentations: self.topRatedMovies.map({
             return MoviePresentation(
-                id: $0.id,
-                title: $0.title,
+                id        : $0.id,
+                title     : $0.title,
                 movieImage: $0.poster_path ?? "-")
         })))
-        self.sections.append(.popularShows(viewModel: self.popularShows.map({
+        self.sections.append(.popularShows(presentations: self.popularShows.map({
             return MoviePresentation(
-                id: $0.id,
-                title: $0.name,
+                id        : $0.id,
+                title     : $0.name,
                 movieImage: $0.poster_path ?? "-")
         })))
         
-        self.sections.append(.topRatedShows(viewModel: self.topRatedShows.map({
+        self.sections.append(.topRatedShows(presentations: self.topRatedShows.map({
             return MoviePresentation(
-                id: $0.id,
-                title: $0.name,
+                id        : $0.id,
+                title     : $0.name,
                 movieImage: $0.poster_path ?? "-")
         })))
-        self.sections.append(.nowPlayings(viewModel: self.nowPlayingMovies.map({
+        self.sections.append(.nowPlayings(presentations: self.nowPlayingMovies.map({
             return MoviePresentation(
-                id: $0.id,
-                title: $0.title,
+                id        : $0.id,
+                title     : $0.title,
                 movieImage: $0.poster_path ?? "-")
         })))
     }

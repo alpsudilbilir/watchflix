@@ -45,6 +45,13 @@ extension UIViewController {
         childVC.view.frame = containerView.bounds
         childVC.didMove(toParent: self)
     }
+    
+    func alert(title: String, message: String, actionMessage: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let actionButton    = UIAlertAction(title: actionMessage, style: .default)
+        alertController.addAction(actionButton)
+        DispatchQueue.main.async { self.present(alertController, animated: true) }
+    }
 }
 
 

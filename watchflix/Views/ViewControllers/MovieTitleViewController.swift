@@ -10,8 +10,8 @@ import SDWebImage
 import SnapKit
 
 protocol MovieTitleViewControllerDelegate: AnyObject {
-    func addToFavorites(_ button: WFSymbolButton)
-    func addToWatchlist(_ button: WFSymbolButton)
+    func toggleFavorites(_ button: WFSymbolButton)
+    func toggleWatchlist(_ button: WFSymbolButton)
 }
 
 class MovieTitleViewController: UIViewController {
@@ -30,7 +30,7 @@ class MovieTitleViewController: UIViewController {
         roundView.layer.cornerRadius = roundView.width / 2
         return roundView
     }()
-
+    
     
     weak var delegate: MovieTitleViewControllerDelegate?
     var movieDetail: MovieDetailsResponse
@@ -47,7 +47,7 @@ class MovieTitleViewController: UIViewController {
         configure(with: movieDetail)
     }
     
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -61,13 +61,39 @@ class MovieTitleViewController: UIViewController {
     private func configureButtons() {
         favoriteButton.addTarget(self, action: #selector(didTapFavorite), for: .touchUpInside)
         watchlistButton.addTarget(self, action: #selector(didTapWatchlist), for: .touchUpInside)
+        initializeButtonSymbols()
+        
+    }
+    private func initializeButtonSymbols() {
+        PersistenceService.getMovies(type: .watchlist) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let movies):
+                if movies.contains(where: { $0.id == self.movieDetail.id }) {
+                    self.watchlistButton.configure(with: SFSymbols.bookmarkFill)
+                } else { self.watchlistButton.configure(with: SFSymbols.bookmark) }
+            case .failure(let error):
+                print(error)
+            }
+        }
+        PersistenceService.getMovies(type: .favorite) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let movies):
+                if movies.contains(where: { $0.id == self.movieDetail.id }) {
+                    self.favoriteButton.configure(with: SFSymbols.heartFill)
+                } else { self.favoriteButton.configure(with: SFSymbols.heart) }
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     @objc private func didTapFavorite() {
-        delegate?.addToFavorites(favoriteButton)
+        delegate?.toggleFavorites(favoriteButton)
         
     }
     @objc private func didTapWatchlist() {
-        delegate?.addToWatchlist(watchlistButton)
+        delegate?.toggleWatchlist(watchlistButton)
     }
     
     private func layoutUI() {

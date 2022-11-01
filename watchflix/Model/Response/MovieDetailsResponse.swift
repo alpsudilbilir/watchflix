@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 struct MovieDetailsResponse: Codable {
     let id: Int
     let genres: [Genre]
@@ -18,9 +17,4 @@ struct MovieDetailsResponse: Codable {
     let title: String
     let tagline: String
     let vote_average: Double
-    
 }
-
-
-
-

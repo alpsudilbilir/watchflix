@@ -28,6 +28,6 @@ class WFLabel: UILabel {
     private func configure() {
         textColor                  = .label
         lineBreakMode              = .byTruncatingTail
-        numberOfLines              = 0
+        numberOfLines              = 8
     }
 }

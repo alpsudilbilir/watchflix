@@ -24,8 +24,6 @@ class WFTitleLabel: UILabel {
     
     private func configure() {
         textColor                  = .label
-        adjustsFontSizeToFitWidth  = true
-        minimumScaleFactor         = 0.9
         lineBreakMode              = .byTruncatingTail
         font                       = .systemFont(ofSize: 20, weight: .semibold)
         numberOfLines              = 2

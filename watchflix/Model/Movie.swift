@@ -14,3 +14,5 @@ struct Movie: Codable {
     let poster_path: String?
     let release_date: String?
 }
+
+

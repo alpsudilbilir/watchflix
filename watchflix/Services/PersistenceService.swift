@@ -7,42 +7,48 @@
 
 import Foundation
 
+
+public enum ListType: String {
+    case favorite
+    case watchlist
+}
+
 struct PersistenceService {
     
     static let defaults = UserDefaults.standard
     
-    enum ListType: String {
-        case favorite
-        case watchlist
-    }
-    enum PersistenceActionType {
-        case add
-        case remove
-    }
-    
-    static func updateWith(movie: Movie, listType: ListType, actionType: PersistenceActionType, completion: @escaping (WFError?) -> Void ) {
+    static func updateWith(movie: Movie, listType: ListType, button: WFSymbolButton, completion: @escaping (WFError?) -> Void ) {
         getMovies(type: listType) { result in
             switch result {
             case .success(var movies):
-                switch actionType {
-                case .add:
-                    guard !movies.contains(where: { $0.id == movie.id }) else {
-                        completion(.alreadyInList)
-                        return
-                    }
-                    movies.append(movie)
-                case .remove:
+                if  movies.contains(where: { $0.id == movie.id }) {
                     movies.removeAll { $0.id == movie.id }
-                }
+                     }
+                else { movies.insert(movie, at: 0) }
+                configureButtonSymbols(movie: movie, movies: movies, button: button, type: listType)
                 completion(setMovies(movies: movies, type: listType))
             case .failure(let error):
                 print(error)
                 completion(.unableToAdd)
             }
         }
-         
     }
-
+    
+    static func configureButtonSymbols(movie: Movie, movies: [Movie], button: WFSymbolButton, type: ListType) {
+        switch type {
+        case .watchlist:
+            if movies.contains(where: { $0.id == movie.id }) {
+                button.configure(with: SFSymbols.bookmarkFill)
+            }
+            else { button.configure(with: SFSymbols.bookmark) }
+        case .favorite:
+            if movies.contains(where: { $0.id == movie.id }) {
+                button.configure(with: SFSymbols.heartFill)
+            }
+            else { button.configure(with: SFSymbols.heart) }
+        }
+    }
+    
     static func setMovies(movies: [Movie], type: ListType) -> WFError? {
         do {
             switch type {
