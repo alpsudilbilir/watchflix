@@ -7,6 +7,7 @@
 
 import UIKit
 import SDWebImage
+import SnapKit
 
 class MovieCell: UICollectionViewCell {
     
@@ -24,7 +25,9 @@ class MovieCell: UICollectionViewCell {
     }
     
     func layoutUI() {
-        movieImageView.frame = contentView.bounds
+        movieImageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
     
     func configure(with model: MoviePresentation) {

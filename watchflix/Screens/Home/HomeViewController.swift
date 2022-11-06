@@ -40,14 +40,7 @@ class HomeViewController: UIViewController {
         setupCollectionView()
         fetchMovies()
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        collectionView.snp.makeConstraints { make in
-            make.edges.equalTo(view)
-        }
-    }
-    
+
     private func configureViewController() {
         title = "Home"
         view.backgroundColor = .secondarySystemBackground
@@ -56,6 +49,7 @@ class HomeViewController: UIViewController {
     
     private func setupCollectionView() {
         view.addSubview(collectionView)
+        collectionView.frame                  = view.bounds
         collectionView.backgroundColor        = .secondarySystemBackground
         collectionView.delegate               = self
         collectionView.dataSource             = self

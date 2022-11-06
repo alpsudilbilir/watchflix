@@ -13,6 +13,18 @@ fileprivate var containerView: UIView!
 
 extension UIViewController {
     
+    func formatDate(with date: String) -> String {
+        let dateFormatterGet          = DateFormatter()
+        dateFormatterGet.dateFormat   = "yyyy-MM-dd"
+        
+        let dateFormatterPrint        = DateFormatter()
+        dateFormatterPrint.dateFormat = "MMM dd,yyyy"
+        
+        let date                      = dateFormatterGet.date(from: date)
+        let formattedDate             = dateFormatterPrint.string(from: date!)
+        return formattedDate
+    }
+    
     func showLoadingView() {
         containerView = UIView(frame: view.bounds)
         view.addSubview(containerView)

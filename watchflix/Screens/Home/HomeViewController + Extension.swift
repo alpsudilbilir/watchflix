@@ -77,9 +77,9 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             let vc    = MovieDetailsViewController(movie: movie)
             navigationController?.pushViewController(vc, animated: true)
         case .popularShows: break
-            let show = popularShows[indexPath.row]
-        case .topRatedShows:
-            let show = topRatedShows[indexPath.row]
+//            let show = popularShows[indexPath.row]
+        case .topRatedShows: break
+//            let show = topRatedShows[indexPath.row]
         case .nowPlayings:
             let movie = nowPlayingMovies[indexPath.row]
             let vc    = MovieDetailsViewController(movie: movie)

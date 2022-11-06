@@ -10,7 +10,7 @@ import SnapKit
 
 class UpcomingsCell: UITableViewCell {
     
-    static let identifier = "UpcomingTableViewCell"
+    static let identifier = "UpcomingsCell"
     
     private let movieImageView       = WFImageView(cornerRadius: 10, border: false, contentMode: .scaleAspectFill)
     private let movieTitleLabel      = WFTitleLabel()
