@@ -38,11 +38,11 @@ class UpcomingViewController: UIViewController {
                     let upcomings = response.results
                     self.upcomingMovies += upcomings
                     self.configurePresentations(with: upcomings)
+                    self.dismissLoadingView()
                 case .failure(let error):
                     print(error.localizedDescription)
                 }
             }
-        dismissLoadingView()
         }
     
     private func formatDate(with date: String) -> String {

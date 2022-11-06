@@ -60,11 +60,11 @@ class SearchViewController: UIViewController {
                 let movies          = response.results
                 self.popularMovies += movies
                 self.configurePresentations(with: movies)
+                self.dismissLoadingView()
             case .failure(let error): print(error)
             }
             DispatchQueue.main.async { self.collectionView.reloadData() }
         }
-        dismissLoadingView()
     }
     
     private func configurePresentations(with movies: [Movie]) {

@@ -46,6 +46,13 @@ class HomeViewController: UIViewController {
         view.backgroundColor = .secondarySystemBackground
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: UIImageView(image: Images.barLogo))
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionView.snp.makeConstraints { make in
+            make.edges.equalTo(view)
+        }
+    }
 
     private func setupCollectionView() {
         view.addSubview(collectionView)
@@ -54,7 +61,6 @@ class HomeViewController: UIViewController {
         collectionView.alwaysBounceHorizontal = false
         collectionView.delegate               = self
         collectionView.dataSource             = self
-        collectionView.frame                  = view.bounds
         
         collectionView.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.identifier)
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.identifier)
