@@ -62,6 +62,7 @@ class HomeViewController: UIViewController {
     
     private func fetchMovies() {
         showLoadingView()
+        
         let group = DispatchGroup()
         group.enter()
         group.enter()
