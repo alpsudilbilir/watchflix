@@ -16,7 +16,9 @@ final class MovieService {
     func request<T: Codable>(for endpoint: Endpoint, type: T.Type, completion: @escaping (Result<T, Error>) -> Void) {
         guard let url = URL(string: APIConstants.baseURL + endpoint.rawValue + APIConstants.apiKey + "&page=\(APIConstants.page)") else { return }
         let task      = URLSession.shared.dataTask(with: url) { data, response, error in
+            
             guard let data = data else { return }
+            
             do {
                 let result = try JSONDecoder().decode(type.self, from: data)
                 completion(.success(result))

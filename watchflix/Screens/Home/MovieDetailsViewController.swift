@@ -64,7 +64,6 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
     private func setupViews() {
         view.addSubview(scrollView)
         scrollView.addSubview(container)
-        scrollView.alwaysBounceVertical = true
         container.addSubview(webView)
         container.addSubview(movieTitleView)
         container.addSubview(overviewView)
@@ -119,6 +118,7 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
         let group = DispatchGroup()
         group.enter()
         group.enter()
+        
         MovieService.shared.request(with: movie.id, for: .cast, type: CastResponse.self) { [weak self] result in
             group.leave()
             switch result {
@@ -129,7 +129,6 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
                 print(error.localizedDescription)
             }
         }
-        
         MovieService.shared.request(with: movie.id, for: .similarMovies, type: MovieResponse.self) { [weak self] result in
             group.leave()
             switch result {
@@ -140,7 +139,7 @@ class MovieDetailsViewController: UIViewController, UIScrollViewDelegate, WKNavi
                 print(error.localizedDescription)
             }
         }
-        
+
         group.notify(queue: .main) {
             self.configureSections()
             self.collectionView.reloadData()

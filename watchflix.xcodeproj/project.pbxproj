@@ -175,8 +175,8 @@
 			children = (
 				1519A0D128C7B66200B58DDD /* TabBarViewController.swift */,
 				15A3ECF528C7EC5B000C45A5 /* Home */,
-				1560B94028F6ACDD008563F3 /* Search */,
 				15DFB42428FADC9F0094F1F7 /* Upcoming */,
+				1560B94028F6ACDD008563F3 /* Search */,
 				15D31D0A291010D600BC7596 /* Lists */,
 			);
 			path = Screens;

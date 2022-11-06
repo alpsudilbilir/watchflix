@@ -40,21 +40,19 @@ class HomeViewController: UIViewController {
         setupCollectionView()
         fetchMovies()
     }
-    
+
     private func configureViewController() {
         title = "Home"
         view.backgroundColor = .secondarySystemBackground
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: UIImageView(image: Images.barLogo))
     }
-
+    
     private func setupCollectionView() {
         view.addSubview(collectionView)
+        collectionView.frame                  = view.bounds
         collectionView.backgroundColor        = .secondarySystemBackground
-        collectionView.alwaysBounceVertical   = true
-        collectionView.alwaysBounceHorizontal = false
         collectionView.delegate               = self
         collectionView.dataSource             = self
-        collectionView.frame                  = view.bounds
         
         collectionView.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.identifier)
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.identifier)
@@ -141,8 +139,8 @@ class HomeViewController: UIViewController {
         group.notify(queue: .main) {
             self.configureSections()
             self.collectionView.reloadData()
+            self.dismissLoadingView()
         }
-        dismissLoadingView()
     }
     
     private func configureSections() {
