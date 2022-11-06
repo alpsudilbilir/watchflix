@@ -27,7 +27,7 @@ class SearchResultsCell: UITableViewCell {
         contentView.addSubview(titleLabel)
         contentView.addSubview(mediaTypeLabel)
         contentView.addSubview(playSymbol)
-        constraintViews()
+        layoutUI()
     }
     
     required init?(coder: NSCoder) {
@@ -38,15 +38,14 @@ class SearchResultsCell: UITableViewCell {
         var type = presentation.type
         if type == "movie" {
             type = "Movie 🎬"
-        } else {
-            type = "TV Show 📺"
-        }
+        } else { type = "TV Show 📺" }
+        
         titleLabel.text     = presentation.title
         mediaTypeLabel.text = "\(type)"
         mediaImageView.sd_setImage(with: URL(string: APIConstants.baseImageURL + presentation.image))
 
     }
-    func constraintViews() {
+    func layoutUI() {
         let offset = 5
         mediaImageView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(offset)

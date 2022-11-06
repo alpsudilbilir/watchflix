@@ -15,12 +15,12 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionType = sections[section]
         switch sectionType {
-        case .popularMovies(let popularMovies)  : return popularMovies.count
-        case .trendingMovies(let trendingMovies): return trendingMovies.count
-        case .topRatedMovies(let topRatedMovies): return topRatedMovies.count
-        case .popularShows(let popularShows)    : return popularShows.count
-        case .topRatedShows(let topRatedShows)  : return topRatedShows.count
-        case .nowPlayings(let nowplayings)      : return nowplayings.count
+        case .popularMovies (let popularMovies)  : return popularMovies.count
+        case .trendingMovies(let trendingMovies) : return trendingMovies.count
+        case .topRatedMovies(let topRatedMovies) : return topRatedMovies.count
+        case .popularShows  (let popularShows)   : return popularShows.count
+        case .topRatedShows (let topRatedShows)  : return topRatedShows.count
+        case .nowPlayings   (let nowplayings)    : return nowplayings.count
         }
     }
     
@@ -28,7 +28,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let cell             = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCell.identifier, for: indexPath) as! MovieCell
         let sectionType      = sections[indexPath.section]
         cell.backgroundColor = .secondarySystemBackground
-
+        
         switch sectionType {
         case .popularMovies(let presentations):
             let presentation     = presentations[indexPath.row]
@@ -53,7 +53,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         case .nowPlayings(let presentations):
             let presentation = presentations[indexPath.row]
             cell.configure(with: presentation)
-            return cell   
+            return cell
         }
     }
     
@@ -61,26 +61,25 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         collectionView.deselectItem(at: indexPath, animated: true)
         
         let section = sections[indexPath.section]
-         var show: TV
         switch section {
         case .popularMovies:
             let movie = popularMovies[indexPath.row]
             let vc    = MovieDetailsViewController(movie: movie)
             navigationController?.pushViewController(vc, animated: true)
-
+            
         case .trendingMovies:
             let movie = trendingMovies[indexPath.row]
             let vc    = MovieDetailsViewController(movie: movie)
             navigationController?.pushViewController(vc, animated: true)
-
+            
         case .topRatedMovies:
             let movie = topRatedMovies[indexPath.row]
             let vc    = MovieDetailsViewController(movie: movie)
             navigationController?.pushViewController(vc, animated: true)
-        case .popularShows:
-             show = popularShows[indexPath.row]
-        case .topRatedShows:
-             show = topRatedShows[indexPath.row]
+        case .popularShows: break
+//            let show = popularShows[indexPath.row]
+        case .topRatedShows: break
+//            let show = topRatedShows[indexPath.row]
         case .nowPlayings:
             let movie = nowPlayingMovies[indexPath.row]
             let vc    = MovieDetailsViewController(movie: movie)
@@ -91,9 +90,9 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func numberOfSections(in collectionView: UICollectionView) -> Int { return sections.count }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeader.identifier, for: indexPath) as! SectionHeader
-
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeader.identifier, for: indexPath) as! SectionHeader
         let sectionType = sections[indexPath.section]
+        
         switch sectionType {
         case .popularMovies  : header.configure(with: "Popular")
         case .trendingMovies : header.configure(with: "Trending")

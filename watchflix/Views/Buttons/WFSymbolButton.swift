@@ -22,7 +22,6 @@ class WFSymbolButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     func configure(with symbol: String) {
         var config         = UIButton.Configuration.plain()
         config.image       = UIImage(systemName: symbol, withConfiguration: UIImage.SymbolConfiguration(pointSize: 20))

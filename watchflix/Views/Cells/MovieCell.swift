@@ -11,20 +11,19 @@ import SDWebImage
 class MovieCell: UICollectionViewCell {
     
     static let identifier      = "MovieCell"
-    
     private let movieImageView = WFImageView(cornerRadius: 8, border: false, contentMode: .scaleToFill)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(movieImageView)
+        layoutUI()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    func layoutUI() {
         movieImageView.frame = contentView.bounds
     }
     

@@ -19,41 +19,45 @@ class UpcomingsCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: nil)
-        contentView.addSubview(movieImageView)
-        contentView.addSubview(movieTitleLabel)
-        contentView.addSubview(movieOverviewLabel)
-        contentView.addSubview(dateLabel)
-            constraintSubViews()
+        setupViews()
+        layoutUI()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func constraintSubViews() {
-         movieImageView.snp.makeConstraints { make in
-             make.top.equalToSuperview()
-             make.leading.equalToSuperview().offset(5)
-             make.width.equalTo(160)
-             make.height.equalToSuperview().offset(-10)
-         }
-         movieTitleLabel.snp.makeConstraints { make in
-             make.top.equalToSuperview().offset(5)
-             make.leading.equalTo(movieImageView.snp.trailing).offset(5)
-             make.trailing.equalToSuperview()
-         }
-         dateLabel.snp.makeConstraints { make in
-             make.top.equalTo(movieTitleLabel.snp.bottom).offset(2)
-             make.leading.equalTo(movieImageView.snp.trailing).offset(5)
-             make.trailing.equalToSuperview().offset(5)
-             make.height.equalTo(20)
-         }
-         movieOverviewLabel.snp.makeConstraints { make in
-             make.top.equalTo(dateLabel.snp.bottom).offset(5)
-             make.leading.equalTo(movieImageView.snp.trailing).offset(5)
-             make.trailing.equalToSuperview().offset(-5)
-             make.bottom.equalToSuperview().offset(-5)
-         }
+    private func setupViews() {
+        contentView.addSubview(movieImageView)
+        contentView.addSubview(movieTitleLabel)
+        contentView.addSubview(movieOverviewLabel)
+        contentView.addSubview(dateLabel)
+    }
+    
+    private func layoutUI() {
+        movieImageView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview().offset(5)
+            make.width.equalTo(160)
+            make.height.equalToSuperview().offset(-10)
+        }
+        movieTitleLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(5)
+            make.leading.equalTo(movieImageView.snp.trailing).offset(5)
+            make.trailing.equalToSuperview()
+        }
+        dateLabel.snp.makeConstraints { make in
+            make.top.equalTo(movieTitleLabel.snp.bottom).offset(2)
+            make.leading.equalTo(movieImageView.snp.trailing).offset(5)
+            make.trailing.equalToSuperview().offset(5)
+            make.height.equalTo(20)
+        }
+        movieOverviewLabel.snp.makeConstraints { make in
+            make.top.equalTo(dateLabel.snp.bottom).offset(5)
+            make.leading.equalTo(movieImageView.snp.trailing).offset(5)
+            make.trailing.equalToSuperview().offset(-5)
+            make.bottom.equalToSuperview().offset(-5)
+        }
     }
     
     func configure(with model: UpcomingsPresentation) {
@@ -62,5 +66,5 @@ class UpcomingsCell: UITableViewCell {
         movieOverviewLabel.text = model.overview
         dateLabel.text          = model.releaseDate
     }
-   
+    
 }

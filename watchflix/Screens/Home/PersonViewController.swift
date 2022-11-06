@@ -14,8 +14,15 @@ class PersonViewController: UIViewController {
     private let personImageView  = WFImageView(cornerRadius: 90, border: true, contentMode: .scaleAspectFill)
     private let personTitleLabel = WFTitleLabel()
     private let bioTitleLabel    = WFTitleLabel()
-    private let personBioLabel   = WFLabel(fontSize: 16, weight: .light, textAlignment: .natural)
-    private let scrollView       = UIScrollView()
+    private let bioTextView      = {
+        let textView             = UITextView()
+        textView.font            = .systemFont(ofSize: 16, weight: .regular)
+        textView.backgroundColor = .secondarySystemBackground
+        textView.textColor       = .label
+        textView.isEditable      = false
+        
+        return textView
+    }()
     
     let personID: Int
     
@@ -42,17 +49,13 @@ class PersonViewController: UIViewController {
     }
     
     private func setupViews() {
-        view.addSubview(scrollView)
-        scrollView.addSubview(personImageView)
-        scrollView.addSubview(personTitleLabel)
-        scrollView.addSubview(bioTitleLabel)
-        scrollView.addSubview(personBioLabel)
+        view.addSubview(personImageView)
+        view.addSubview(personTitleLabel)
+        view.addSubview(bioTitleLabel)
+        view.addSubview(bioTextView)
     }
     
     private func layoutUI() {
-        scrollView.snp.makeConstraints { make in
-            make.leading.trailing.top.bottom.equalToSuperview()
-        }
         personImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().offset(20)
@@ -66,8 +69,9 @@ class PersonViewController: UIViewController {
             make.top.equalTo(personTitleLabel.snp.bottom).offset(15)
             make.leading.equalToSuperview().offset(5)
         }
-        personBioLabel.snp.makeConstraints { make in
+        bioTextView.snp.makeConstraints { make in
             make.top.equalTo(bioTitleLabel.snp.bottom).offset(5)
+            make.bottom.equalToSuperview().offset(-5)
             make.trailing.equalToSuperview().offset(-5)
             make.leading.equalToSuperview().offset(5)
         }
@@ -80,7 +84,7 @@ class PersonViewController: UIViewController {
                 DispatchQueue.main.async {
                     self?.personTitleLabel.text = person.name
                     self?.bioTitleLabel.text    = "Biography"
-                    self?.personBioLabel.text   = person.biography
+                    self?.bioTextView.text      = person.biography
                     self?.personImageView.sd_setImage(with: URL(string: APIConstants.baseImageURL + (person.profile_path)))
                 }
             case .failure(let error):

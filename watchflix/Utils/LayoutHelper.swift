@@ -7,7 +7,7 @@
 
 import UIKit
 
-//MARK: - Home Collection View Layout
+//MARK: - Home Screen Collection View Layout
 
 func createLayout(sectionIndex: Int) -> NSCollectionLayoutSection  {
     
@@ -52,7 +52,6 @@ func createLayout(sectionIndex: Int) -> NSCollectionLayoutSection  {
         section.boundarySupplementaryItems = sectionBoundaryItem
 
         return section
-
     }
 }
 

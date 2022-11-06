@@ -11,16 +11,23 @@ class OverviewView: UIView {
     
     private let overviewTitle = WFTitleLabel()
     private let overviewLabel = WFLabel(fontSize: 16, weight: .light, textAlignment: .natural)
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(overviewTitle)
-        addSubview(overviewLabel)
-        layoutViews()
+        setupViews()
+        layoutUI()
     }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    func layoutViews() {
+    
+    private func setupViews() {
+        addSubview(overviewTitle)
+        addSubview(overviewLabel)
+    }
+    
+    private func layoutUI() {
         overviewTitle.snp.makeConstraints { make in
             make.left.equalTo(snp.left).offset(5)
             make.right.equalTo(snp.right)
@@ -32,6 +39,7 @@ class OverviewView: UIView {
             make.right.equalTo(snp.right)
         }
     }
+    
     func configure(with model: MovieDetailsResponse) {
         overviewTitle.text = "Overview"
         overviewLabel.text = model.overview

@@ -32,18 +32,19 @@ class UpcomingViewController: UIViewController {
     private func fetchUpcomings() {
         showLoadingView()
             MovieService.shared.request(for: .upcoming, type: MovieResponse.self) { [weak self] result in
-                guard let self = self else { return }
+                guard let self = self else { return }
                 switch result {
                 case .success(let response):
                     let upcomings = response.results
                     self.upcomingMovies += upcomings
                     self.configurePresentations(with: upcomings)
-                    self.dismissLoadingView()
                 case .failure(let error):
                     print(error.localizedDescription)
                 }
             }
+        dismissLoadingView()
         }
+    
     private func formatDate(with date: String) -> String {
         let dateFormatterGet = DateFormatter()
         dateFormatterGet.dateFormat = "yyyy-MM-dd"

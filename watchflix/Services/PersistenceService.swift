@@ -23,7 +23,7 @@ struct PersistenceService {
             case .success(var movies):
                 if  movies.contains(where: { $0.id == movie.id }) {
                     movies.removeAll { $0.id == movie.id }
-                     }
+                }
                 else { movies.insert(movie, at: 0) }
                 configureButtonSymbols(movie: movie, movies: movies, button: button, type: listType)
                 completion(setMovies(movies: movies, type: listType))

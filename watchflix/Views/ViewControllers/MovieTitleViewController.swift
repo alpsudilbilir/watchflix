@@ -31,9 +31,8 @@ class MovieTitleViewController: UIViewController {
         return roundView
     }()
     
-    
     weak var delegate: MovieTitleViewControllerDelegate?
-    var movieDetail: MovieDetailsResponse
+    var movieDetail  : MovieDetailsResponse
     
     init(movieDetail: MovieDetailsResponse) {
         self.movieDetail = movieDetail
@@ -47,7 +46,6 @@ class MovieTitleViewController: UIViewController {
         configure(with: movieDetail)
     }
     
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -56,14 +54,13 @@ class MovieTitleViewController: UIViewController {
         let views = [movieImageView, titleLabel, yearLabel, infoLabel, movieQuote, userScoreCirle, favoriteButton, watchlistButton]
         views.forEach { view.addSubview($0) }
         userScoreCirle.addSubview(userScoreLabel)
-        
     }
     private func configureButtons() {
         favoriteButton.addTarget(self, action: #selector(didTapFavorite), for: .touchUpInside)
         watchlistButton.addTarget(self, action: #selector(didTapWatchlist), for: .touchUpInside)
         initializeButtonSymbols()
-        
     }
+    
     private func initializeButtonSymbols() {
         PersistenceService.getMovies(type: .watchlist) { [weak self] result in
             guard let self = self else { return }
@@ -88,10 +85,11 @@ class MovieTitleViewController: UIViewController {
             }
         }
     }
+    
     @objc private func didTapFavorite() {
         delegate?.toggleFavorites(favoriteButton)
-        
     }
+    
     @objc private func didTapWatchlist() {
         delegate?.toggleWatchlist(watchlistButton)
     }
@@ -150,47 +148,53 @@ class MovieTitleViewController: UIViewController {
     }
     
     func configure(with model: MovieDetailsResponse) {
-        //SCORE
-        let score = Int(model.vote_average * 10.0) //6.7 -> 67
-        let percentageScore = model.vote_average / 10 // 6.7 -> 0.67
+        configureScoreLabel(with: model)
+        configureYearLabel(with: model)
+        configureInfoLabel(with: model)
+        titleLabel.text = model.title
+        movieQuote.text = model.tagline
+        movieImageView.sd_setImage(with: URL(string: APIConstants.baseImageURL + model.poster_path))
+    }
+    
+    private func configureScoreLabel(with model: MovieDetailsResponse) {
+        let score           = Int(model.vote_average * 10.0)
+        let percentageScore = model.vote_average / 10
         userScoreLabel.text = "\(score)﹪"
         configureCircleStroke(with: percentageScore)
-        //IMAGE
-        movieImageView.sd_setImage(with: URL(string: APIConstants.baseImageURL + model.poster_path))
-        //TITLE
-        titleLabel.text = model.title
-        //YEAR
-        let releaseYear = model.release_date.components(separatedBy: "-").first ?? "-"
+    }
+    
+    private func configureYearLabel(with model: MovieDetailsResponse) {
+        let releaseYear = model.release_date.components(separatedBy: "-").first ?? ""
         yearLabel.text = "Year: \(releaseYear)"
-        //GENRE & TIME
+    }
+    
+    private func configureInfoLabel(with model: MovieDetailsResponse) {
         var genreString = ""
         model.genres.forEach { genre in
             if genre.name != model.genres.last?.name {
                 genreString += "\(genre.name), "
-            } else {
-                genreString += genre.name
-            }
+            } else { genreString += genre.name }
         }
-        let movieTime = model.runtime ?? 0 // 119 Int
-        let hour = movieTime / 60
-        let minute = movieTime % 60
+        let movieTime      = model.runtime ?? 0
+        let hour           = movieTime / 60
+        let minute         = movieTime % 60
         let durationString = "\(hour)h \(minute)m"
-        infoLabel.text = genreString + " ・ " + durationString
-        movieQuote.text = model.tagline
+        infoLabel.text     = genreString + " ・ " + durationString
     }
-    func configureCircleStroke(with score: Double) {
+    
+    private func configureCircleStroke(with score: Double) {
         let circlePath = UIBezierPath(arcCenter: CGPoint (x: userScoreCirle.width / 2, y: userScoreCirle.width / 2),
                                       radius: userScoreCirle.width / 2,
                                       startAngle: CGFloat(-0.5 * Double.pi),
                                       endAngle: CGFloat(1.5 * Double.pi),
                                       clockwise: true)
-        let circleShape = CAShapeLayer()
-        circleShape.path = circlePath.cgPath
+        let circleShape         = CAShapeLayer()
+        circleShape.path        = circlePath.cgPath
         circleShape.strokeColor = UIColor.yellow.cgColor
-        circleShape.fillColor = UIColor.white.withAlphaComponent(0.00001).cgColor
-        circleShape.lineWidth = 5
+        circleShape.fillColor   = UIColor.white.withAlphaComponent(0.00001).cgColor
+        circleShape.lineWidth   = 5
         circleShape.strokeStart = 0.0
-        circleShape.strokeEnd = score
+        circleShape.strokeEnd   = score
         userScoreCirle.layer.addSublayer(circleShape)
     }
 }

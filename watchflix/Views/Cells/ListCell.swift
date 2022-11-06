@@ -18,16 +18,18 @@ class ListCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupCell()
+        setupViews()
         layoutUI()
     }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    private func setupCell() {
+    
+    private func setupViews() {
         addSubview(mediaImageView)
         addSubview(titleLabel)
-        self.accessoryType = .disclosureIndicator
+        self.accessoryType   = .disclosureIndicator
         self.backgroundColor = .secondarySystemBackground
     }
     
