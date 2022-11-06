@@ -37,42 +37,27 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViewController()
-        setupViews()
         setupCollectionView()
-        setupNavigationBar()
         fetchMovies()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        collectionView.snp.makeConstraints { make in
-            make.edges.equalTo(view)
-        }
     }
     
     private func configureViewController() {
         title = "Home"
         view.backgroundColor = .secondarySystemBackground
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: UIImageView(image: Images.barLogo))
     }
-    
-    private func setupViews() {
-        view.addSubview(collectionView)
-    }
-    
 
     private func setupCollectionView() {
+        view.addSubview(collectionView)
         collectionView.backgroundColor        = .secondarySystemBackground
         collectionView.alwaysBounceVertical   = true
         collectionView.alwaysBounceHorizontal = false
         collectionView.delegate               = self
         collectionView.dataSource             = self
+        collectionView.frame                  = view.bounds
         
         collectionView.register(MovieCell.self, forCellWithReuseIdentifier: MovieCell.identifier)
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.identifier)
-    }
-    
-    func setupNavigationBar() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: UIImageView(image: Images.barLogo))
     }
     
     private func fetchMovies() {
@@ -122,7 +107,7 @@ class HomeViewController: UIViewController {
             guard let self = self else { return }
             switch result {
             case .success(let response):
-                let series = response.results
+                let series         = response.results
                 self.popularShows += series
             case .failure:
                 self.alert(title: "Network Error", message: "Unable to get movies", actionMessage: "Try again")
@@ -133,7 +118,7 @@ class HomeViewController: UIViewController {
             guard let self = self else { return }
             switch result {
             case .success(let response):
-                let series = response.results
+                let series          = response.results
                 self.topRatedShows += series
             case .failure:
                 self.alert(title: "Network Error", message: "Unable to get movies", actionMessage: "Try again")
@@ -144,7 +129,7 @@ class HomeViewController: UIViewController {
             guard let self = self else { return }
             switch result {
             case .success(let response):
-                let movies = response.results
+                let movies             = response.results
                 self.nowPlayingMovies += movies
             case .failure:
                 self.alert(title: "Network Error", message: "Unable to get movies", actionMessage: "Try again")
