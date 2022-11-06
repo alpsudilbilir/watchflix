@@ -168,7 +168,6 @@ class HomeViewController: UIViewController {
                 title     : $0.name,
                 movieImage: $0.poster_path ?? "-")
         })))
-        
         self.sections.append(.topRatedShows(presentations: self.topRatedShows.map({
             return MoviePresentation(
                 id        : $0.id,
