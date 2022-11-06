@@ -41,19 +41,19 @@ class HomeViewController: UIViewController {
         fetchMovies()
     }
     
-    private func configureViewController() {
-        title = "Home"
-        view.backgroundColor = .secondarySystemBackground
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: UIImageView(image: Images.barLogo))
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView.snp.makeConstraints { make in
             make.edges.equalTo(view)
         }
     }
-
+    
+    private func configureViewController() {
+        title = "Home"
+        view.backgroundColor = .secondarySystemBackground
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: UIImageView(image: Images.barLogo))
+    }
+    
     private func setupCollectionView() {
         view.addSubview(collectionView)
         collectionView.backgroundColor        = .secondarySystemBackground
