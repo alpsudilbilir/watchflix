@@ -69,6 +69,7 @@ class HomeViewController: UIViewController {
         group.enter()
         group.enter()
         group.enter()
+        
         MovieService.shared.request(for: .popular, type: MovieResponse.self) { [weak self] result in
             group.leave()
             guard let self = self else { return }
