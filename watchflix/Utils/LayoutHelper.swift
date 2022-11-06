@@ -50,7 +50,6 @@ func createLayout(sectionIndex: Int) -> NSCollectionLayoutSection  {
         
         let section                        = NSCollectionLayoutSection(group: group)
         section.boundarySupplementaryItems = sectionBoundaryItem
-
         return section
     }
 }
