@@ -57,8 +57,6 @@ class HomeViewController: UIViewController {
     private func setupCollectionView() {
         view.addSubview(collectionView)
         collectionView.backgroundColor        = .secondarySystemBackground
-        collectionView.alwaysBounceVertical   = true
-        collectionView.alwaysBounceHorizontal = false
         collectionView.delegate               = self
         collectionView.dataSource             = self
         
@@ -147,8 +145,8 @@ class HomeViewController: UIViewController {
         group.notify(queue: .main) {
             self.configureSections()
             self.collectionView.reloadData()
+            self.dismissLoadingView()
         }
-        dismissLoadingView()
     }
     
     private func configureSections() {
